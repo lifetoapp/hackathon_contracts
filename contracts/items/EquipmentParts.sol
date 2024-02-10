@@ -62,3 +62,5 @@ abstract contract LaptopPart is EquipmentPartBase, Laptop {
         _mintEquipmentPart(to, LAPTOP_SUBTYPE, 0);
     }
 }
+
+abstract contract EquipmentParts is PhonePart, EarbudsPart, PowerbankPart, LaptopPart {}
