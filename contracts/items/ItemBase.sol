@@ -34,4 +34,17 @@ abstract contract ItemBase is ERC1155Upgradeable {
 
         _mint(to, complexId, 1, "");
     }
+
+    function _mintItems(
+        address to,
+        uint amount,
+        uint64 type_,
+        uint64 subtype,
+        uint64 itemId,
+        uint64 extra
+    ) internal {
+        uint complexId = ComplexId.fromParts(type_, subtype, itemId, extra);
+
+        _mint(to, complexId, amount, "");
+    }
 }
