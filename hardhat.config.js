@@ -1,5 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("@openzeppelin/hardhat-upgrades");
+require("hardhat-abi-exporter");
 require("dotenv").config();
 
 const MNEMONIC = process.env.MNEMONIC;
@@ -37,6 +38,11 @@ module.exports = {
         runs: 200
       }
     }
+  },
+  abiExporter: {
+    path: "./abi",
+    runOnCompile: true,
+    clear: true
   },
   networks: {
     op_bnb_test: {
