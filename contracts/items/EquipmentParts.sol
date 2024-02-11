@@ -24,10 +24,10 @@ abstract contract EquipmentPartBase is EquipmentBase {
         uint64 subType = getItemSubtype(part);
         uint64 itemId = getItemId(part);
 
-        require(isEquipmentPart(part), "Equipment: not an equipment");
+        require(isEquipmentPart(part), "EquipmentParts: not an equipment");
         require(
             balanceOf(owner, part) >= NUMBER_OF_PARTS_TO_MERGE,
-            "Equipment: not enough parts"
+            "EquipmentParts: not enough parts"
         );
 
         _burn(owner, part, NUMBER_OF_PARTS_TO_MERGE);
@@ -37,28 +37,28 @@ abstract contract EquipmentPartBase is EquipmentBase {
 
 abstract contract PhonePart is EquipmentPartBase, Phone {
 
-    function _mintPhonePart(address to) private {
+    function _mintPhonePart(address to) internal {
         _mintEquipmentPart(to, PHONE_SUBTYPE, 0);
     }
 }
 
 abstract contract EarbudsPart is EquipmentPartBase, Earbuds {
 
-    function _mintEarbudsPart(address to) private {
+    function _mintEarbudsPart(address to) internal {
         _mintEquipmentPart(to, EARBUDS_SUBTYPE, 0);
     }
 }
 
 abstract contract PowerbankPart is EquipmentPartBase, Powerbank {
 
-    function _mintPowerbankPart(address to) private {
+    function _mintPowerbankPart(address to) internal {
         _mintEquipmentPart(to, POWERBANK_SUBTYPE, 0);
     }
 }
 
 abstract contract LaptopPart is EquipmentPartBase, Laptop {
 
-    function _mintLaptopPart(address to) private {
+    function _mintLaptopPart(address to) internal {
         _mintEquipmentPart(to, LAPTOP_SUBTYPE, 0);
     }
 }

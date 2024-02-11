@@ -58,7 +58,7 @@ abstract contract Phone is EquipmentBase {
     function _mintPhone(
         address to,
         uint64 level
-    ) private {
+    ) internal {
         _mintEquipment(to, PHONE_SUBTYPE, 0, level);
     }
 }
@@ -74,7 +74,7 @@ abstract contract Earbuds is EquipmentBase {
     function _mintEarbuds(
         address to,
         uint64 level
-    ) private {
+    ) internal {
         _mintEquipment(to, EARBUDS_SUBTYPE, 0, level);
     }
 }
@@ -90,7 +90,7 @@ abstract contract Powerbank is EquipmentBase {
     function _mintPowerbank(
         address to,
         uint64 level
-    ) private {
+    ) internal {
         _mintEquipment(to, POWERBANK_SUBTYPE, 0, level);
     }
 }
@@ -106,7 +106,7 @@ abstract contract Laptop is EquipmentBase {
     function _mintLaptop(
         address to,
         uint64 level
-    ) private {
+    ) internal {
         _mintEquipment(to, LAPTOP_SUBTYPE, 0, level);
     }
 }
