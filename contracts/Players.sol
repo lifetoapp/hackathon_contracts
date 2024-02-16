@@ -19,6 +19,14 @@ import {IERC1155} from '@openzeppelin/contracts/token/ERC1155/IERC1155.sol';
 import {ERC1155} from '@openzeppelin/contracts/token/ERC1155/ERC1155.sol';
 import {EnumerableSet} from '@openzeppelin/contracts/utils/structs/EnumerableSet.sol';
 
+// Errors.
+error InvalidLeague();
+error NotAnAuthorizedOperator();
+error NotTheOwnerOfTheToken();
+error UserAlreadyInTheLeague();
+error InvalidLeagueChange();
+error InvalidNftItemsAddress();
+
 /**
  * @title The Players smart contract.
  * @author Life2App
@@ -50,21 +58,35 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   uint64 public constant POWERBANK_SUBTYPE = uint64(uint256(keccak256('POWERBANK_SUBTYPE')));
   /// @notice The ID of the laptop subtype.
   uint64 public constant LAPTOP_SUBTYPE = uint64(uint256(keccak256('LAPTOP_SUBTYPE')));
+  /// @notice The maximum number of leagues.
+  uint256 public constant MAX_LEAGUE = 10;
 
   /// @notice The mapping of player info per address.
   mapping(address => PlayerInfo) public playerInfo;
   /// @notice The mapping of authorized operators.
   mapping(address => bool) public authorizedOperators;
-  /// @notice The mapping of the current league per address.
-  mapping(address => uint256) public currentLeague;
   /// @notice The mapping of the league to the players.
   mapping(uint256 => EnumerableSet.AddressSet) public leaguePlayers;
+  /// @notice The NFT smart contract.
+  IERC1155 public nftItems;
+
+  // Events.
+  /// @notice The event emitted when the player's objects are updated.
+  event PlayerObjectsUpdate(address indexed user, uint256 phoneTokenId, uint256 earbudsTokenId, uint256 powerbankTokenId, uint256 laptopTokenId);
+  /// @notice The event emitted when the player's league is updated.
+  event PlayerLeagueUpdate(address indexed user, uint256 league);
+  /// @notice The event emitted when the player's rating and experience are updated.
+  event PlayerRatingAndExperienceUpdate(address indexed user, uint256 rating, uint256 experience);
+  /// @notice The event emitted when the authorized operator is set.
+  event AuthorizedOperatorSet(address authorizedOperator, bool authorize);
+  /// @notice The event emitted when the NFT items smart contract is set.
+  event NftItemsSet(address nftItems);
 
   /**
    * @notice The modifier to check if the sender is an authorized operator.
    */
   modifier onlyAuthorizedOperator() {
-    require(authorizedOperators[msg.sender], 'Players: Not an authorized operator');
+    if (authorizedOperators[msg.sender] == false) revert NotAnAuthorizedOperator();
     _;
   }
 
@@ -79,10 +101,12 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 
   /**
    * @notice The smart contract initializer.
+   * @param nftItemsAddress The address of the smart contract of the NFT items.
    */
-  function initialize() public initializer {
+  function initialize(address nftItemsAddress) public initializer {
     __Ownable_init(msg.sender);
     __ReentrancyGuard_init();
+    nftItems = IERC1155(nftItemsAddress);
   }
 
   /**
@@ -94,13 +118,10 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    */
   function updateUserSelectedObjects(uint256 phoneTokenId, uint256 earbudsTokenId, uint256 powerbankTokenId, uint256 laptopTokenId) external {
     // Verifying ownership of each token.
-    require(phoneTokenId == 0 || IERC1155(msg.sender).balanceOf(msg.sender, phoneTokenId) > 0, 'Players: Not the owner of the phone token');
-    require(earbudsTokenId == 0 || IERC1155(msg.sender).balanceOf(msg.sender, earbudsTokenId) > 0, 'Players: Not the owner of the earbuds token');
-    require(
-      powerbankTokenId == 0 || IERC1155(msg.sender).balanceOf(msg.sender, powerbankTokenId) > 0,
-      'Players: Not the owner of the power bank token'
-    );
-    require(laptopTokenId == 0 || IERC1155(msg.sender).balanceOf(msg.sender, laptopTokenId) > 0, 'Players: Not the owner of the laptop token');
+    if (phoneTokenId != 0 && nftItems.balanceOf(msg.sender, phoneTokenId) == 0) revert NotTheOwnerOfTheToken();
+    if (earbudsTokenId != 0 && nftItems.balanceOf(msg.sender, earbudsTokenId) == 0) revert NotTheOwnerOfTheToken();
+    if (powerbankTokenId != 0 && nftItems.balanceOf(msg.sender, powerbankTokenId) == 0) revert NotTheOwnerOfTheToken();
+    if (laptopTokenId != 0 && nftItems.balanceOf(msg.sender, laptopTokenId) == 0) revert NotTheOwnerOfTheToken();
     // Set the selected objects.
     playerInfo[msg.sender].selectedObjects[PHONE_SUBTYPE] = phoneTokenId;
     playerInfo[msg.sender].selectedObjects[EARBUDS_SUBTYPE] = earbudsTokenId;
@@ -108,6 +129,8 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     playerInfo[msg.sender].selectedObjects[LAPTOP_SUBTYPE] = laptopTokenId;
     // Set coolness based on the selected objects.
     // TODO: Set the coolness based on the selected objects.
+    // Emit the event.
+    emit PlayerObjectsUpdate(msg.sender, phoneTokenId, earbudsTokenId, powerbankTokenId, laptopTokenId);
   }
 
   /**
@@ -116,12 +139,21 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    * @param league The league number.
    */
   function updateUserCurrentLeague(address user, uint256 league) external onlyAuthorizedOperator {
+    // Check if the user is already in the league.
+    if (leaguePlayers[league].contains(user)) revert UserAlreadyInTheLeague();
+    // Check the league validity.
+    if (league >= MAX_LEAGUE) revert InvalidLeague();
+    // League can be only changed by one level.
+    uint256 currentLeague = playerInfo[user].currentLeague;
+    if (league > currentLeague + 1 || league < currentLeague - 1) revert InvalidLeagueChange();
     // Remove the user from the current league.
     leaguePlayers[currentLeague[user]].remove(user);
     // Add the user to the new league.
     leaguePlayers[league].add(user);
     // Update the user's current league.
-    currentLeague[user] = league;
+    playerInfo[user].currentLeague = league;
+    // Emit the event.
+    emit PlayerLeagueUpdate(user, league);
   }
 
   /**
@@ -134,6 +166,8 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     // Update the user's rating and experience.
     playerInfo[user].currentRating = rating;
     playerInfo[user].currentExperience = experience;
+    // Emit the event.
+    emit PlayerRatingAndExperienceUpdate(user, rating, experience);
   }
 
   /**
@@ -143,6 +177,17 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    */
   function setAuthorizedOperator(address authorizedOperator_, bool authorize) external onlyOwner {
     authorizedOperators[authorizedOperator_] = authorize;
+    emit AuthorizedOperatorSet(authorizedOperator_, authorize);
+  }
+
+  /**
+   * @notice The function to set the NFT items smart contract.
+   * @param nftItemsAddress The address of the NFT items smart contract.
+   */
+  function setNftItems(address nftItemsAddress) external onlyOwner {
+    if (nftItemsAddress == address(0)) revert InvalidNftItemsAddress();
+    nftItems = IERC1155(nftItemsAddress);
+    emit NftItemsSet(nftItemsAddress);
   }
 
   /**
