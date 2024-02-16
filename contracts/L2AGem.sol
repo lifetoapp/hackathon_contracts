@@ -34,6 +34,12 @@ contract L2AppGem is
   ReentrancyGuardUpgradeable,
   EIP712DataValidator
 {
+  /**
+   * @notice The struct of the mint data.
+   * @param to The address to which the tokens will be transferred.
+   * @param amount The amount of tokens to be minted.
+   * @param nonce The nonce of the minting transaction.
+   */
   struct MintData {
     address to;
     uint256 amount;
@@ -42,6 +48,8 @@ contract L2AppGem is
 
   /// @notice The max amount of tokens that can be minted.
   uint256 public maxMintableAmount;
+  /// @notice The minimum time between minting for each address.
+  uint256 public mintingInterval;
   /// @notice The mapping of authorized minters.
   mapping(address => bool) public minters;
   /// @notice The mapping of timestamps of the last minting per address.
@@ -71,13 +79,14 @@ contract L2AppGem is
   /**
    * @notice The smart contract initializer.
    */
-  function initialize(uint256 maxMintableAmount_) public initializer {
+  function initialize(uint256 maxMintableAmount_, uint256 mintingInterval_) public initializer {
     __ERC20_init('L2APPGEM', 'L2APPGEM');
     __ERC20Burnable_init();
     __Ownable_init(msg.sender);
     __ReentrancyGuard_init();
     EIP712DataValidator.initializeValidator();
     maxMintableAmount = maxMintableAmount_;
+    mintingInterval = mintingInterval_;
   }
 
   /**
@@ -123,6 +132,8 @@ contract L2AppGem is
     require(mintData.amount <= maxMintableAmount, 'MINT_AMOUNT_EXCEEDS_MAX');
     // Check if the nonce is not used.
     require(!usedNonces[mintData.to][mintData.nonce], 'NONCE_ALREADY_USED');
+    // Check if the minting interval has passed.
+    require(block.timestamp - lastMinting[mintData.to] >= mintingInterval, 'MINTING_INTERVAL_NOT_PASSED');
     // Mint the tokens.
     _mint(mintData.to, mintData.amount);
     // Update the last minting timestamp.
