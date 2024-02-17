@@ -87,6 +87,8 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   LifeHackatonItems public nftItems;
   /// @notice The array of leagues.
   League[MAX_LEAGUE] public leagues;
+  /// @notice Received lootboxes per user per league.
+  mapping(address => mapping(uint256 => bool)) public hasReceivedLootbox;
 
   // Events.
   /// @notice The event emitted when the player's objects are updated.
@@ -283,7 +285,12 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
           leaguePlayers[userLeague].remove(user);
           leaguePlayers[i].add(user);
           playerInfo[user].currentLeague = i;
-          _rewardLootBoxes(user, leagues[i].lootBoxes);
+          uint256 lootBoxes = leagues[i].lootBoxes;
+
+          if (!hasReceivedLootbox[user][i] && lootBoxes > 0) {
+            hasReceivedLootbox[user][i] = true;
+            _rewardLootBoxes(user, lootBoxes);
+          }
         }
         break;
       }
