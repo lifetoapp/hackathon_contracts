@@ -120,8 +120,6 @@ contract L2AppGem is
   /**
    * @notice The mint function is used to mint new tokens.
    * @dev This function mints new tokens and transfers them to the specified address.
-   * @param to The address to which the tokens will be transferred.
-   * @param amount The amount of tokens to be minted.
    */
   function mint(bytes calldata data, bytes32 encodedData, bytes calldata signature) public nonReentrant {
     // Verify the signature.
@@ -141,18 +139,7 @@ contract L2AppGem is
     // Mark the nonce as used.
     usedNonces[mintData.to][mintData.nonce] = true;
     // Emit the Mint event.
-    emit Mint(to, amount);
-  }
-
-  /**
-   * @notice The burn function is used to burn tokens.
-   * @dev This function burns tokens from the specified address.
-   * @param from The address from which the tokens will be burned.
-   * @param amount The amount of tokens to be burned.
-   */
-  function burn(address from, uint256 amount) public nonReentrant onlyMinter {
-    _burn(from, amount);
-    emit Burn(from, amount);
+    emit Mint(mintData.to, mintData.amount);
   }
 
   /**

@@ -14,7 +14,6 @@ pragma solidity 0.8.23;
 import {Initializable} from '@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol';
 import {UUPSUpgradeable} from '@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol';
 import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
-import {ReentrancyGuardUpgradeable} from '@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol';
 import {IERC1155} from '@openzeppelin/contracts/token/ERC1155/IERC1155.sol';
 import {ERC1155} from '@openzeppelin/contracts/token/ERC1155/ERC1155.sol';
 import {EnumerableSet} from '@openzeppelin/contracts/utils/structs/EnumerableSet.sol';
@@ -34,6 +33,9 @@ error InvalidNftItemsAddress();
  * @dev The Players smart contract is used to manage the players of the game.
  */
 contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
+
+  using EnumerableSet for EnumerableSet.AddressSet;
+
   /**
    * @notice The struct of the player info.
    * @param selectedObjects The array of selected objects.
@@ -66,7 +68,7 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   /// @notice The mapping of authorized operators.
   mapping(address => bool) public authorizedOperators;
   /// @notice The mapping of the league to the players.
-  mapping(uint256 => EnumerableSet.AddressSet) public leaguePlayers;
+  mapping(uint256 => EnumerableSet.AddressSet) private leaguePlayers;
   /// @notice The NFT smart contract.
   IERC1155 public nftItems;
 
@@ -105,7 +107,6 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    */
   function initialize(address nftItemsAddress) public initializer {
     __Ownable_init(msg.sender);
-    __ReentrancyGuard_init();
     nftItems = IERC1155(nftItemsAddress);
   }
 
@@ -147,7 +148,7 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     uint256 currentLeague = playerInfo[user].currentLeague;
     if (league > currentLeague + 1 || league < currentLeague - 1) revert InvalidLeagueChange();
     // Remove the user from the current league.
-    leaguePlayers[currentLeague[user]].remove(user);
+    leaguePlayers[currentLeague].remove(user);
     // Add the user to the new league.
     leaguePlayers[league].add(user);
     // Update the user's current league.

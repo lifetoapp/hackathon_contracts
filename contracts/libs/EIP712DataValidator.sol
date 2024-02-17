@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity 0.8.17;
+pragma solidity 0.8.23;
 
 /*
  *  ██      ██ ███████ ███████ ██████   █████  ██████  ██████
@@ -22,7 +22,7 @@ import {ECDSA} from '@openzeppelin/contracts/utils/cryptography/ECDSA.sol';
  * @dev The following contract is used to check whether data transmitted to smart contracts
         was signed using the valid private key.
  */
-contract EIP712DataValidator is Initializable, UUPSUpgradeable, ContextUpgradeable, OwnableUpgradeable {
+contract EIP712DataValidator is Initializable, ContextUpgradeable, OwnableUpgradeable {
   using ECDSA for bytes32;
   /// @notice The signing name that is used in the domain separator.
   string public constant SIGNING_NAME = 'L2A_DATA_VALIDATOR';
@@ -69,7 +69,7 @@ contract EIP712DataValidator is Initializable, UUPSUpgradeable, ContextUpgradeab
    * @param signature The data signing signature.
    * @return The recovered address
    */
-  function recoverSigningAddress(bytes calldata data, bytes32 encodedData, bytes calldata signature) public view returns (bool) {
+  function recoverSigningAddress(bytes calldata data, bytes32 encodedData, bytes calldata signature) public view returns (address) {
     // Check if the encoded data and data are the same.
     require(keccak256(data) == encodedData, 'INVALID_DATA');
     // Verify EIP-712 signature by recreating the data structure
@@ -83,10 +83,4 @@ contract EIP712DataValidator is Initializable, UUPSUpgradeable, ContextUpgradeab
     address recoveredAddress = digest.recover(signature);
     return recoveredAddress;
   }
-
-  /**
-   * @notice Handles authorization of the upgrade.
-   * @dev Only the contract owner is authorized to upgrade the contract.
-   */
-  function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 }
