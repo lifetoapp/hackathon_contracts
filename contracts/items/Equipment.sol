@@ -22,7 +22,6 @@ abstract contract EquipmentBase is ItemBase {
     function getEquipmentCoolness(uint256 item) public pure virtual returns (uint256) {
         // Calculates the coolness of the equipment.
         // Used formula: CP(n)=10*2^(n-1)
-        // TODO: Check if level is not 0?
         return 10 * (2 ** (getEquipmentLevel(item) - 1));
     }
 
