@@ -177,7 +177,14 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    * @param by The rating to decrease by.
    */
   function decreaseUserRating(address user, uint256 by) external onlyAuthorizedOperator {
-    uint256 rating = playerInfo[user].currentRating - by;
+    uint256 rating;
+
+    if (playerInfo[user].currentRating > by) {
+      rating = playerInfo[user].currentRating - by;
+    } else {
+      rating = 0;
+    }
+
     playerInfo[user].currentRating = rating;
     _updateLeague(user);
     emit PlayerRatingUpdate(user, rating);
