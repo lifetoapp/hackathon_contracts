@@ -16,4 +16,8 @@ node_modules
 # compiled files
 /bin
 
+artifacts
+cache
+.env
+.vscode
 .idea/
