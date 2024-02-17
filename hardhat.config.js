@@ -112,10 +112,10 @@ module.exports = {
   docgen: {
     path: './docs',
     clear: true,
-    runOnCompile: true,
+    runOnCompile: false,
   },
   outputValidator: {
-    runOnCompile: true,
+    runOnCompile: false,
     enabled: true,
     checks: {
       title: 'error',
