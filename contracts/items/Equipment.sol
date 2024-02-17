@@ -19,10 +19,17 @@ abstract contract EquipmentBase is ItemBase {
         return getItemExtra(item);
     }
 
-    function getEquipmentCoolness(uint256 item) public pure virtual returns (uint64) {
+    function getEquipmentCoolness(uint256 item) public pure virtual returns (uint256) {
         // Calculates the coolness of the equipment.
         // Used formula: CP(n)=10*2^(n-1)
+        // TODO: Check if level is not 0?
         return 10 * (2 ** (getEquipmentLevel(item) - 1));
+    }
+
+    function getRewardMultiplier(uint256 item) public pure virtual returns (uint256) {
+        // Calculates the reward multiplier of the equipment.
+        // Used formula: RM(n)=5*n
+        return 5 * getEquipmentLevel(item);
     }
 
     function _mintEquipment(
@@ -91,6 +98,12 @@ abstract contract Powerbank is EquipmentBase {
 
     function isPowerbank(uint item) public pure returns (bool) {
         return isEquipment(item) && getItemSubtype(item) == POWERBANK_SUBTYPE;
+    }
+
+    function getPowerbankCapacity(uint256 item) public pure returns (uint256) {
+        // Calculates the number of additional battles the powerbank can provide.
+        // Used formula: C(n)=2*n+1
+        return 2 * getEquipmentLevel(item) + 1;
     }
 
     function _mintPowerbank(
