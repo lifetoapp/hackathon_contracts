@@ -26,6 +26,11 @@ error UserAlreadyInTheLeague();
 error InvalidLeagueChange();
 error InvalidNftItemsAddress();
 
+// Interfaces.
+interface LifeHackatonItems is IERC1155 {
+  function getEquipmentCoolness(uint256 item) external pure returns (uint256);
+}
+
 /**
  * @title The Players smart contract.
  * @author Life2App
@@ -33,23 +38,32 @@ error InvalidNftItemsAddress();
  * @dev The Players smart contract is used to manage the players of the game.
  */
 contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
-
   using EnumerableSet for EnumerableSet.AddressSet;
 
   /**
    * @notice The struct of the player info.
    * @param selectedObjects The array of selected objects.
    * @param currentLeague The current league of the player.
-   * @param currentCoolness The current coolness of the player.
-   * @param currentExperience The current experience of the player.
    * @param currentRating The current rating of the player.
    */
   struct PlayerInfo {
     mapping(uint64 => uint256) selectedObjects;
     uint256 currentLeague;
-    uint256 currentCoolness;
-    uint256 currentExperience;
     uint256 currentRating;
+  }
+
+  /**
+   * @notice The struct of the league.
+   * @param name The name of the league.
+   * @param minRating The minimum rating of the league.
+   * @param maxRating The maximum rating of the league.
+   * @param lootBoxes The number of loot boxes.
+   */
+  struct League {
+    string name;
+    uint256 minRating;
+    uint256 maxRating;
+    uint256 lootBoxes;
   }
 
   /// @notice The ID of the phone subtype.
@@ -61,7 +75,7 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   /// @notice The ID of the laptop subtype.
   uint64 public constant LAPTOP_SUBTYPE = uint64(uint256(keccak256('LAPTOP_SUBTYPE')));
   /// @notice The maximum number of leagues.
-  uint256 public constant MAX_LEAGUE = 10;
+  uint256 public constant MAX_LEAGUE = 9;
 
   /// @notice The mapping of player info per address.
   mapping(address => PlayerInfo) public playerInfo;
@@ -70,15 +84,17 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   /// @notice The mapping of the league to the players.
   mapping(uint256 => EnumerableSet.AddressSet) private leaguePlayers;
   /// @notice The NFT smart contract.
-  IERC1155 public nftItems;
+  LifeHackatonItems public nftItems;
+  /// @notice The array of leagues.
+  League[MAX_LEAGUE] public leagues;
 
   // Events.
   /// @notice The event emitted when the player's objects are updated.
   event PlayerObjectsUpdate(address indexed user, uint256 phoneTokenId, uint256 earbudsTokenId, uint256 powerbankTokenId, uint256 laptopTokenId);
   /// @notice The event emitted when the player's league is updated.
   event PlayerLeagueUpdate(address indexed user, uint256 league);
-  /// @notice The event emitted when the player's rating and experience are updated.
-  event PlayerRatingAndExperienceUpdate(address indexed user, uint256 rating, uint256 experience);
+  /// @notice The event emitted when the player's rating is updated.
+  event PlayerRatingUpdate(address indexed user, uint256 rating);
   /// @notice The event emitted when the authorized operator is set.
   event AuthorizedOperatorSet(address authorizedOperator, bool authorize);
   /// @notice The event emitted when the NFT items smart contract is set.
@@ -107,7 +123,16 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    */
   function initialize(address nftItemsAddress) public initializer {
     __Ownable_init(msg.sender);
-    nftItems = IERC1155(nftItemsAddress);
+    nftItems = LifeHackatonItems(nftItemsAddress);
+    leagues[0] = League('Training', 0, 99, 0);
+    leagues[1] = League('Iron', 100, 249, 1);
+    leagues[2] = League('Bronze', 250, 699, 2);
+    leagues[3] = League('Silver', 700, 1299, 3);
+    leagues[4] = League('Gold', 1300, 1899, 4);
+    leagues[5] = League('Platinum', 1900, 2499, 5);
+    leagues[6] = League('Diamond', 2500, 3099, 6);
+    leagues[7] = League('Master', 3100, 3699, 7);
+    leagues[8] = League('Elite', 3700, type(uint256).max, 10); // max rating for Elite
   }
 
   /**
@@ -135,40 +160,27 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   }
 
   /**
-   * @notice The function updates the user's current league.
+   * @notice The function increases the user's rating.
    * @param user The address of the user.
-   * @param league The league number.
+   * @param by The rating to increase by.
    */
-  function updateUserCurrentLeague(address user, uint256 league) external onlyAuthorizedOperator {
-    // Check if the user is already in the league.
-    if (leaguePlayers[league].contains(user)) revert UserAlreadyInTheLeague();
-    // Check the league validity.
-    if (league >= MAX_LEAGUE) revert InvalidLeague();
-    // League can be only changed by one level.
-    uint256 currentLeague = playerInfo[user].currentLeague;
-    if (league > currentLeague + 1 || league < currentLeague - 1) revert InvalidLeagueChange();
-    // Remove the user from the current league.
-    leaguePlayers[currentLeague].remove(user);
-    // Add the user to the new league.
-    leaguePlayers[league].add(user);
-    // Update the user's current league.
-    playerInfo[user].currentLeague = league;
-    // Emit the event.
-    emit PlayerLeagueUpdate(user, league);
+  function increaseUserRating(address user, uint256 by) external onlyAuthorizedOperator {
+    uint256 rating = playerInfo[user].currentRating + by;
+    playerInfo[user].currentRating = rating;
+    _updateLeague(user);
+    emit PlayerRatingUpdate(user, rating);
   }
 
   /**
-   * @notice The function updates the user's rating and experience.
+   * @notice The function decreases the user's rating.
    * @param user The address of the user.
-   * @param rating The rating of the user.
-   * @param experience The experience of the user.
+   * @param by The rating to decrease by.
    */
-  function updateUserRatingAndExperience(address user, uint256 rating, uint256 experience) external onlyAuthorizedOperator {
-    // Update the user's rating and experience.
+  function decreaseUserRating(address user, uint256 by) external onlyAuthorizedOperator {
+    uint256 rating = playerInfo[user].currentRating - by;
     playerInfo[user].currentRating = rating;
-    playerInfo[user].currentExperience = experience;
-    // Emit the event.
-    emit PlayerRatingAndExperienceUpdate(user, rating, experience);
+    _updateLeague(user);
+    emit PlayerRatingUpdate(user, rating);
   }
 
   /**
@@ -187,7 +199,7 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    */
   function setNftItems(address nftItemsAddress) external onlyOwner {
     if (nftItemsAddress == address(0)) revert InvalidNftItemsAddress();
-    nftItems = IERC1155(nftItemsAddress);
+    nftItems = LifeHackatonItems(nftItemsAddress);
     emit NftItemsSet(nftItemsAddress);
   }
 
@@ -215,11 +227,64 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   }
 
   /**
+   * @notice The function returns the coolness of the user.
+   * @param user The address of the user.
+   * @return The coolness of the user.
+   */
+  function getUserCoolness(address user) external view returns (uint256) {
+    return
+      nftItems.getEquipmentCoolness(playerInfo[user].selectedObjects[PHONE_SUBTYPE]) +
+      nftItems.getEquipmentCoolness(playerInfo[user].selectedObjects[EARBUDS_SUBTYPE]) +
+      nftItems.getEquipmentCoolness(playerInfo[user].selectedObjects[POWERBANK_SUBTYPE]) +
+      nftItems.getEquipmentCoolness(playerInfo[user].selectedObjects[LAPTOP_SUBTYPE]);
+  }
+
+  /**
+   * @notice The function returns the number of users in the league.
+   * @param league The league number.
+   * @return The number of users in the league.
+   */
+  function getLeaguePlayersCount(uint256 league) external view returns (uint256) {
+    return leaguePlayers[league].length();
+  }
+
+  /**
+   * @notice The function returns the user by index in the league.
+   * @param league The league number.
+   * @param index The index of the user in the league.
+   * @return The user in the league.
+   */
+  function getLeaguePlayerByIndex(uint256 league, uint256 index) external view returns (address) {
+    return leaguePlayers[league].at(index);
+  }
+
+  /**
    * @notice The version of the smart contract.
    * @return The version of the smart contract.
    */
   function version() external pure returns (string memory) {
     return '1.0.0';
+  }
+
+  function _updateLeague(address user) internal {
+    uint256 userRating = playerInfo[user].currentRating;
+    uint256 userLeague = playerInfo[user].currentLeague;
+
+    for (uint i = 0; i < leagues.length; i++) {
+      if (userRating >= leagues[i].minRating && userRating <= leagues[i].maxRating) {
+        if (userLeague != i) {
+          leaguePlayers[userLeague].remove(user);
+          leaguePlayers[i].add(user);
+          playerInfo[user].currentLeague = i;
+          _rewardLootBoxes(user, leagues[i].lootBoxes);
+        }
+        break;
+      }
+    }
+  }
+
+  function _rewardLootBoxes(address user, uint256 lootBoxes) internal {
+    // TODO: Reward loot boxes to the user.
   }
 
   /**

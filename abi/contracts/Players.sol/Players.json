@@ -43,16 +43,6 @@
   },
   {
     "inputs": [],
-    "name": "InvalidLeague",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "InvalidLeagueChange",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "InvalidNftItemsAddress",
     "type": "error"
   },
@@ -107,11 +97,6 @@
       }
     ],
     "name": "UUPSUnsupportedProxiableUUID",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "UserAlreadyInTheLeague",
     "type": "error"
   },
   {
@@ -248,15 +233,9 @@
         "internalType": "uint256",
         "name": "rating",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "experience",
-        "type": "uint256"
       }
     ],
-    "name": "PlayerRatingAndExperienceUpdate",
+    "name": "PlayerRatingUpdate",
     "type": "event"
   },
   {
@@ -372,6 +351,48 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "by",
+        "type": "uint256"
+      }
+    ],
+    "name": "decreaseUserRating",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "league",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getLeaguePlayerByIndex",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "league",
         "type": "uint256"
@@ -383,6 +404,44 @@
         "internalType": "address[]",
         "name": "",
         "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "league",
+        "type": "uint256"
+      }
+    ],
+    "name": "getLeaguePlayersCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "getUserCoolness",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -411,6 +470,24 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "by",
+        "type": "uint256"
+      }
+    ],
+    "name": "increaseUserRating",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "nftItemsAddress",
         "type": "address"
       }
@@ -421,11 +498,45 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "leagues",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minRating",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxRating",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "lootBoxes",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "nftItems",
     "outputs": [
       {
-        "internalType": "contract IERC1155",
+        "internalType": "contract LifeHackatonItems",
         "name": "",
         "type": "address"
       }
@@ -459,16 +570,6 @@
       {
         "internalType": "uint256",
         "name": "currentLeague",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "currentCoolness",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "currentExperience",
         "type": "uint256"
       },
       {
@@ -540,47 +641,6 @@
       }
     ],
     "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "league",
-        "type": "uint256"
-      }
-    ],
-    "name": "updateUserCurrentLeague",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "rating",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "experience",
-        "type": "uint256"
-      }
-    ],
-    "name": "updateUserRatingAndExperience",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
