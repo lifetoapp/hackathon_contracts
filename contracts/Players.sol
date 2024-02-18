@@ -26,6 +26,10 @@ error NotTheOwnerOfTheToken();
 error PlayerAlreadyInTheLeague();
 error InvalidLeagueChange();
 error InvalidNftItemsAddress();
+error InvalidPhoneTokenType();
+error InvalidEarbudsTokenType();
+error InvalidPowerbankTokenType();
+error InvalidLaptopTokenType();
 
 /**
  * @title The Players smart contract.
@@ -141,18 +145,25 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    * @param laptopTokenId The ID of the laptop token.
    */
   function updatePlayerSelectedObjects(uint256 phoneTokenId, uint256 earbudsTokenId, uint256 powerbankTokenId, uint256 laptopTokenId) external {
+    bool hasPhone = phoneTokenId != 0;
+    bool hasEarbuds = earbudsTokenId != 0;
+    bool hasPowerbank = powerbankTokenId != 0;
+    bool hasLaptop = laptopTokenId != 0;
     // Verifying ownership of each token.
-    if (phoneTokenId != 0 && nftItems.balanceOf(msg.sender, phoneTokenId) == 0) revert NotTheOwnerOfTheToken();
-    if (earbudsTokenId != 0 && nftItems.balanceOf(msg.sender, earbudsTokenId) == 0) revert NotTheOwnerOfTheToken();
-    if (powerbankTokenId != 0 && nftItems.balanceOf(msg.sender, powerbankTokenId) == 0) revert NotTheOwnerOfTheToken();
-    if (laptopTokenId != 0 && nftItems.balanceOf(msg.sender, laptopTokenId) == 0) revert NotTheOwnerOfTheToken();
+    if (hasPhone && nftItems.balanceOf(msg.sender, phoneTokenId) == 0) revert NotTheOwnerOfTheToken();
+    if (hasEarbuds && nftItems.balanceOf(msg.sender, earbudsTokenId) == 0) revert NotTheOwnerOfTheToken();
+    if (hasPowerbank && nftItems.balanceOf(msg.sender, powerbankTokenId) == 0) revert NotTheOwnerOfTheToken();
+    if (hasLaptop && nftItems.balanceOf(msg.sender, laptopTokenId) == 0) revert NotTheOwnerOfTheToken();
+    // Check for validity of the objects.
+    if (hasPhone && nftItems.getItemSubtype(phoneTokenId) != PHONE_SUBTYPE) revert InvalidPhoneTokenType();
+    if (hasEarbuds && nftItems.getItemSubtype(earbudsTokenId) != EARBUDS_SUBTYPE) revert InvalidEarbudsTokenType();
+    if (hasPowerbank && nftItems.getItemSubtype(powerbankTokenId) != POWERBANK_SUBTYPE) revert InvalidPowerbankTokenType();
+    if (hasLaptop && nftItems.getItemSubtype(laptopTokenId) != LAPTOP_SUBTYPE) revert InvalidLaptopTokenType();
     // Set the selected objects.
     playerInfo[msg.sender].selectedObjects[PHONE_SUBTYPE] = phoneTokenId;
     playerInfo[msg.sender].selectedObjects[EARBUDS_SUBTYPE] = earbudsTokenId;
     playerInfo[msg.sender].selectedObjects[POWERBANK_SUBTYPE] = powerbankTokenId;
     playerInfo[msg.sender].selectedObjects[LAPTOP_SUBTYPE] = laptopTokenId;
-    // Set coolness based on the selected objects.
-    // TODO: Set the coolness based on the selected objects.
     // Emit the event.
     emit PlayerObjectsUpdate(msg.sender, phoneTokenId, earbudsTokenId, powerbankTokenId, laptopTokenId);
   }
@@ -213,12 +224,26 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    * @param player The address of the player.
    * @return The player-selected objects.
    */
-  function getPlayerSelectedObjects(address player) external view returns (uint256[4] memory) {
+  function getPlayerSelectedObjects(address player) public view returns (uint256[4] memory) {
+    uint256[] memory tokenIds = new uint256[](4);
+    tokenIds[0] = playerInfo[player].selectedObjects[PHONE_SUBTYPE];
+    tokenIds[1] = playerInfo[player].selectedObjects[EARBUDS_SUBTYPE];
+    tokenIds[2] = playerInfo[player].selectedObjects[POWERBANK_SUBTYPE];
+    tokenIds[3] = playerInfo[player].selectedObjects[LAPTOP_SUBTYPE];
+
+    address[] memory playerAddresses = new address[](4);
+    playerAddresses[0] = player;
+    playerAddresses[1] = player;
+    playerAddresses[2] = player;
+    playerAddresses[3] = player;
+
+    uint256[] memory balances = nftItems.balanceOfBatch(playerAddresses, tokenIds);
+
     return [
-      playerInfo[player].selectedObjects[PHONE_SUBTYPE],
-      playerInfo[player].selectedObjects[EARBUDS_SUBTYPE],
-      playerInfo[player].selectedObjects[POWERBANK_SUBTYPE],
-      playerInfo[player].selectedObjects[LAPTOP_SUBTYPE]
+      balances[0] > 0 ? tokenIds[0] : 0, // Phone
+      balances[1] > 0 ? tokenIds[1] : 0, // Earbuds
+      balances[2] > 0 ? tokenIds[2] : 0, // Powerbank
+      balances[3] > 0 ? tokenIds[3] : 0 // Laptop
     ];
   }
 
@@ -260,11 +285,16 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    * @return The coolness of the player.
    */
   function getPlayerCoolness(address player) external view returns (uint256) {
-    return
-      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[PHONE_SUBTYPE]) +
-      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[EARBUDS_SUBTYPE]) +
-      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[POWERBANK_SUBTYPE]) +
-      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[LAPTOP_SUBTYPE]);
+    uint256 coolness;
+    uint256[4] memory selectedObjects = getPlayerSelectedObjects(player);
+
+    for (uint256 i; i < selectedObjects.length; i++) {
+      if (selectedObjects[i] != 0) {
+        coolness += nftItems.getEquipmentCoolness(selectedObjects[i]);
+      }
+    }
+
+    return coolness;
   }
 
   /**
