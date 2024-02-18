@@ -19,6 +19,11 @@ import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/Own
 import {ReentrancyGuardUpgradeable} from '@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol';
 import {EIP712DataValidator} from './libs/EIP712DataValidator.sol';
 
+// Errors.
+error UnauthorizedMinter();
+error NonceAlreadyUsed();
+error MaxMintableAmountExceeded();
+
 /**
  * @title The Life2App GEM Token.
  * @author Life2App
@@ -46,16 +51,14 @@ contract L2AppGem is
     uint256 nonce;
   }
 
-  /// @notice The max amount of tokens that can be minted.
+  /// @notice The max amount of tokens that can be minted per day.
   uint256 public maxMintableAmount;
-  /// @notice The minimum time between minting for each address.
-  uint256 public mintingInterval;
   /// @notice The mapping of authorized minters.
   mapping(address => bool) public minters;
-  /// @notice The mapping of timestamps of the last minting per address.
-  mapping(address => uint256) public lastMinting;
   /// @notice The mapping of used nonces per address.
   mapping(address => mapping(uint256 => bool)) public usedNonces;
+  /// @notice The mapping contains the number of minted tokens per day per address.
+  mapping(address => mapping(uint256 => uint256)) public mintedPerDay;
 
   // Events.
   /// @notice The event is emitted when a new minter is added.
@@ -123,21 +126,30 @@ contract L2AppGem is
    */
   function mint(bytes calldata data, bytes32 encodedData, bytes calldata signature) public nonReentrant {
     // Verify the signature.
-    require(minters[recoverSigningAddress(data, encodedData, signature)], 'NOT_A_MINTER');
+    if (!minters[recoverSigningAddress(data, encodedData, signature)]) {
+      revert UnauthorizedMinter();
+    }
+
     // Unpack the data.
     MintData memory mintData = abi.decode(data, (MintData));
-    // Check if the amount is not greater than the max mintable amount.
-    require(mintData.amount <= maxMintableAmount, 'MINT_AMOUNT_EXCEEDS_MAX');
+    // Check if max mint amount per day is not exceeded.
+    uint256 currentDay = block.timestamp / 1 days;
+    uint256 dailyMinted = mintedPerDay[mintData.to][currentDay];
+    uint256 mintAmountAfter = dailyMinted + mintData.amount;
+
+    if (mintAmountAfter > maxMintableAmount) {
+      revert MaxMintableAmountExceeded();
+    }
+
     // Check if the nonce is not used.
-    require(!usedNonces[mintData.to][mintData.nonce], 'NONCE_ALREADY_USED');
-    // Check if the minting interval has passed.
-    require(block.timestamp - lastMinting[mintData.to] >= mintingInterval, 'MINTING_INTERVAL_NOT_PASSED');
+    if (usedNonces[mintData.to][mintData.nonce]) {
+      revert NonceAlreadyUsed();
+    }
+
     // Mint the tokens.
     _mint(mintData.to, mintData.amount);
-    // Update the last minting timestamp.
-    lastMinting[mintData.to] = block.timestamp;
-    // Mark the nonce as used.
     usedNonces[mintData.to][mintData.nonce] = true;
+    mintedPerDay[mintData.to][currentDay] = mintAmountAfter;
     // Emit the Mint event.
     emit Mint(mintData.to, mintData.amount);
   }
