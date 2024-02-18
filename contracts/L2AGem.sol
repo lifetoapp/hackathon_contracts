@@ -154,6 +154,26 @@ contract L2AppGem is
   }
 
   /**
+   * @notice Returns the amount of tokens that user can mint today.
+   * @param user The address of the user.
+   * @return The amount of tokens that user can mint today.
+   */
+  function mintableToday(address user) external view returns (uint256) {
+    uint256 currentDay = block.timestamp / 1 days;
+    return maxMintableAmountPerDay - mintedPerDay[user][currentDay];
+  }
+
+  /**
+   * @notice Returns the number of tokens that user has minted today.
+   * @param user The address of the user.
+   * @return The number of tokens that user has minted today.
+   */
+  function mintedToday(address user) external view returns (uint256) {
+    uint256 currentDay = block.timestamp / 1 days;
+    return mintedPerDay[user][currentDay];
+  }
+
+  /**
    * @notice Handles authorization of the upgrade.
    * @dev Only the contract owner is authorized to upgrade the contract.
    */
