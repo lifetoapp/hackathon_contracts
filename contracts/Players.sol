@@ -53,13 +53,13 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    * @param name The name of the league.
    * @param minRating The minimum rating of the league.
    * @param maxRating The maximum rating of the league.
-   * @param lootBoxes The number of loot boxes.
+   * @param rewardLootBoxAmount The number of loot boxes.
    */
   struct League {
-    string name;
+    string name; // TODO: do we need the name in contracts?
     uint256 minRating;
     uint256 maxRating;
-    uint256 lootBoxes;
+    uint256 rewardLootBoxAmount;
   }
 
   /// @notice The ID of the phone subtype.
@@ -83,8 +83,8 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   LifeHackatonItems public nftItems;
   /// @notice The array of leagues.
   League[MAX_LEAGUE] public leagues;
-  /// @notice Received lootboxes per user per league.
-  mapping(address => mapping(uint256 => bool)) public hasReceivedLootbox;
+  /// @notice Received reward lootboxes per user per league.
+  mapping(address => mapping(uint256 => bool)) public hasReceivedReward;
 
   // Events.
   /// @notice The event emitted when the player's objects are updated.
@@ -275,17 +275,18 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     uint256 userRating = playerInfo[user].currentRating;
     uint256 userLeague = playerInfo[user].currentLeague;
 
+    // TODO: make function more effective, no need to check leagues one by one
     for (uint i = 0; i < leagues.length; i++) {
       if (userRating >= leagues[i].minRating && userRating <= leagues[i].maxRating) {
         if (userLeague != i) {
           leaguePlayers[userLeague].remove(user);
           leaguePlayers[i].add(user);
           playerInfo[user].currentLeague = i;
-          uint256 lootBoxes = leagues[i].lootBoxes;
+          uint256 rewardLootBoxAmount = leagues[i].rewardLootBoxAmount;
 
-          if (!hasReceivedLootbox[user][i] && lootBoxes > 0) {
-            hasReceivedLootbox[user][i] = true;
-            _rewardLootBoxes(user, lootBoxes);
+          if (!hasReceivedReward[user][i] && rewardLootBoxAmount > 0) {
+            hasReceivedReward[user][i] = true;
+            _rewardLootBoxes(user, rewardLootBoxAmount);
           }
         }
         break;
