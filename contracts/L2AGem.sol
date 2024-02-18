@@ -19,6 +19,11 @@ import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/Own
 import {ReentrancyGuardUpgradeable} from '@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol';
 import {EIP712DataValidator} from './libs/EIP712DataValidator.sol';
 
+// Errors.
+error UnauthorizedMinter();
+error NonceAlreadyUsed();
+error MaxMintableAmountPerDayExceeded();
+
 /**
  * @title The Life2App GEM Token.
  * @author Life2App
@@ -46,16 +51,14 @@ contract L2AppGem is
     uint256 nonce;
   }
 
-  /// @notice The max amount of tokens that can be minted.
-  uint256 public maxMintableAmount;
-  /// @notice The minimum time between minting for each address.
-  uint256 public mintingInterval;
+  /// @notice The max amount of tokens that can be minted per day.
+  uint256 public maxMintableAmountPerDay;
   /// @notice The mapping of authorized minters.
   mapping(address => bool) public minters;
-  /// @notice The mapping of timestamps of the last minting per address.
-  mapping(address => uint256) public lastMinting;
   /// @notice The mapping of used nonces per address.
   mapping(address => mapping(uint256 => bool)) public usedNonces;
+  /// @notice The mapping contains the number of minted tokens per day per address.
+  mapping(address => mapping(uint256 => uint256)) public mintedPerDay;
 
   // Events.
   /// @notice The event is emitted when a new minter is added.
@@ -79,14 +82,13 @@ contract L2AppGem is
   /**
    * @notice The smart contract initializer.
    */
-  function initialize(uint256 maxMintableAmount_, uint256 mintingInterval_) public initializer {
+  function initialize(uint256 maxMintableAmountPerDay_) public initializer {
     __ERC20_init('L2APPGEM', 'L2APPGEM');
     __ERC20Burnable_init();
     __Ownable_init(msg.sender);
     __ReentrancyGuard_init();
     EIP712DataValidator.initializeValidator();
-    maxMintableAmount = maxMintableAmount_;
-    mintingInterval = mintingInterval_;
+    maxMintableAmountPerDay = maxMintableAmountPerDay_;
   }
 
   /**
@@ -118,28 +120,68 @@ contract L2AppGem is
   }
 
   /**
+   * @notice Mints new tokens and transfers them to the specified address.
+   * @notice Does not account for the max mintable amount per day.
+   * @param to The address to which the tokens will be transferred.
+   * @param amount The amount of tokens to be minted.
+   */
+  function mint(address to, uint256 amount) external onlyAuthorizedOperator {
+      _mint(to, amount);
+      emit Mint(to, amount);
+  }
+
+  /**
    * @notice The mint function is used to mint new tokens.
    * @dev This function mints new tokens and transfers them to the specified address.
    */
   function mint(bytes calldata data, bytes32 encodedData, bytes calldata signature) public nonReentrant {
     // Verify the signature.
-    require(minters[recoverSigningAddress(data, encodedData, signature)], 'NOT_A_MINTER');
+    if (!minters[recoverSigningAddress(data, encodedData, signature)]) {
+      revert UnauthorizedMinter();
+    }
+
     // Unpack the data.
     MintData memory mintData = abi.decode(data, (MintData));
-    // Check if the amount is not greater than the max mintable amount.
-    require(mintData.amount <= maxMintableAmount, 'MINT_AMOUNT_EXCEEDS_MAX');
+    // Check if max mint amount per day is not exceeded.
+    uint256 currentDay = block.timestamp / 1 days;
+    uint256 dailyMinted = mintedPerDay[mintData.to][currentDay];
+    uint256 mintAmountAfter = dailyMinted + mintData.amount;
+
+    if (mintAmountAfter > maxMintableAmountPerDay) {
+      revert MaxMintableAmountPerDayExceeded();
+    }
+
     // Check if the nonce is not used.
-    require(!usedNonces[mintData.to][mintData.nonce], 'NONCE_ALREADY_USED');
-    // Check if the minting interval has passed.
-    require(block.timestamp - lastMinting[mintData.to] >= mintingInterval, 'MINTING_INTERVAL_NOT_PASSED');
+    if (usedNonces[mintData.to][mintData.nonce]) {
+      revert NonceAlreadyUsed();
+    }
+
     // Mint the tokens.
     _mint(mintData.to, mintData.amount);
-    // Update the last minting timestamp.
-    lastMinting[mintData.to] = block.timestamp;
-    // Mark the nonce as used.
     usedNonces[mintData.to][mintData.nonce] = true;
+    mintedPerDay[mintData.to][currentDay] = mintAmountAfter;
     // Emit the Mint event.
     emit Mint(mintData.to, mintData.amount);
+  }
+
+  /**
+   * @notice Returns the amount of tokens that user can mint today.
+   * @param user The address of the user.
+   * @return The amount of tokens that user can mint today.
+   */
+  function mintableToday(address user) external view returns (uint256) {
+    uint256 currentDay = block.timestamp / 1 days;
+    return maxMintableAmountPerDay - mintedPerDay[user][currentDay];
+  }
+
+  /**
+   * @notice Returns the number of tokens that user has minted today.
+   * @param user The address of the user.
+   * @return The number of tokens that user has minted today.
+   */
+  function mintedToday(address user) external view returns (uint256) {
+    uint256 currentDay = block.timestamp / 1 days;
+    return mintedPerDay[user][currentDay];
   }
 
   /**
