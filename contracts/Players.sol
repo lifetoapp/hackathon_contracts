@@ -17,6 +17,7 @@ import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/Own
 import {IERC1155} from '@openzeppelin/contracts/token/ERC1155/IERC1155.sol';
 import {ERC1155} from '@openzeppelin/contracts/token/ERC1155/ERC1155.sol';
 import {EnumerableSet} from '@openzeppelin/contracts/utils/structs/EnumerableSet.sol';
+import {LifeHackatonItems} from './LifeHackatonItems.sol';
 
 // Errors.
 error InvalidLeague();
@@ -25,11 +26,6 @@ error NotTheOwnerOfTheToken();
 error UserAlreadyInTheLeague();
 error InvalidLeagueChange();
 error InvalidNftItemsAddress();
-
-// Interfaces.
-interface LifeHackatonItems is IERC1155 {
-  function getEquipmentCoolness(uint256 item) external pure returns (uint256);
-}
 
 /**
  * @title The Players smart contract.
@@ -297,8 +293,8 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     }
   }
 
-  function _rewardLootBoxes(address user, uint256 lootBoxes) internal {
-    // TODO: Reward loot boxes to the user.
+  function _rewardLootBoxes(address user, uint256 amount) internal {
+    nftItems.giveRegularLootboxes(user, amount);
   }
 
   /**
