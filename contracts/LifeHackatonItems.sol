@@ -72,6 +72,18 @@ contract LifeHackatonItems is
         _mintPremiumLootbox(msgSender);
     }
 
+    function openLootbox(uint item) external {
+        _openLootbox(_msgSender(), item);
+    }
+
+    function mergeEquipmentParts(uint item) external {
+        _mergeEquipmentParts(_msgSender(), item);
+    }
+
+    function mergeEquipment(uint item) external {
+        _mergeEquipment(_msgSender(), item);
+    }
+
     function giveRegularLootboxes(address to, uint amount) external onlyPlayersContract() {
         _mintRegularLootboxes(to, amount);
     }
