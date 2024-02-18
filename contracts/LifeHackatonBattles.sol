@@ -32,9 +32,9 @@ contract LifeHackatonBattles is
 
     Players public playersContract;
 
-    uint public easyRatingStake;
-    uint public normalRatingStake;
-    uint public hardRatingStake;
+    uint public smallRatingChange;
+    uint public normalRatingChange;
+    uint public bigRatingChange;
 
     // player => current/last battle
     mapping(address => BattleData) battles;
@@ -44,17 +44,17 @@ contract LifeHackatonBattles is
 
     function initialize(
         address playersContract_,
-        uint easyRatingStake_,
-        uint normalRatingStake_,
-        uint hardRatingStake_
+        uint smallRatingChange_,
+        uint normalRatingChange_,
+        uint bigRatingChange_
     ) initializer public {
         __Ownable_init(msg.sender);
         __UUPSUpgradeable_init();
 
         playersContract = Players(playersContract_);
-        easyRatingStake_ = easyRatingStake;
-        normalRatingStake = normalRatingStake_;
-        hardRatingStake = hardRatingStake_;
+        smallRatingChange = smallRatingChange_;
+        normalRatingChange = normalRatingChange_;
+        bigRatingChange = bigRatingChange_;
     }
 
     function initiateBattle() external {
@@ -90,10 +90,40 @@ contract LifeHackatonBattles is
         battle.status = BattleStatus.STARTED;
     }
 
+    function completeBattle() external {
+        address player = _msgSender();
+        BattleData storage battle = battles[player];
+        BattleDifficulty difficulty = battle.difficulty;
+
+        if (isBattleWon(player)) {
+            uint ratingIncrease;
+            if (difficulty == BattleDifficulty.NORMAL) {
+                ratingIncrease = normalRatingChange;
+            } else if (difficulty == BattleDifficulty.EASY) {
+                ratingIncrease = smallRatingChange;
+            } else {
+                ratingIncrease = bigRatingChange;
+            }
+
+            playersContract.increasePlayerRating(player, ratingIncrease);
+            // TODO: mint reward tokens
+        } else {
+            uint ratingDecrease;
+            if (difficulty == BattleDifficulty.NORMAL) {
+                ratingDecrease = normalRatingChange;
+            } else if (difficulty == BattleDifficulty.EASY) {
+                ratingDecrease = bigRatingChange;
+            } else {
+                ratingDecrease = smallRatingChange;
+            }
+
+            playersContract.decreasePlayerRating(player, ratingDecrease);
+        }
+
+        battle.status = BattleStatus.COMPLETED;
+    }
+
     // TODO: SETTERS!
-    // function setURI(string memory newURI) external onlyOwner() {
-    //     _setURI(newURI);
-    // }
 
     function isBattleExpired(address player) public view returns (bool) {
         uint randomSourceBlockNumber = battles[player].randomSourceBlockNumber;
