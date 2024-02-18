@@ -30,6 +30,7 @@ error InvalidPhoneTokenType();
 error InvalidEarbudsTokenType();
 error InvalidPowerbankTokenType();
 error InvalidLaptopTokenType();
+error NoMoreFightsForToday();
 
 /**
  * @title The Players smart contract.
@@ -89,6 +90,10 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   League[MAX_LEAGUE] public leagues;
   /// @notice Received reward lootboxes per player per league.
   mapping(address => mapping(uint256 => bool)) public hasReceivedReward;
+  /// @notice The number of fights of a player per day.
+  mapping(address => mapping(uint256 => uint256)) public fightsPerDay;
+  /// @notice The number of initial fights per day a player has.
+  uint256 public initialFightsPerDay;
 
   // Events.
   /// @notice The event emitted when the player's objects are updated.
@@ -135,6 +140,7 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     leagues[6] = League('Diamond', 2500, 3099, 6);
     leagues[7] = League('Master', 3100, 3699, 7);
     leagues[8] = League('Elite', 3700, type(uint256).max, 10); // max rating for Elite
+    initialFightsPerDay = 5;
   }
 
   /**
@@ -220,6 +226,16 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   }
 
   /**
+   * @notice Increases the number of fights of a player.
+   * @param player The address of the player.
+   */
+  function increaseFights(address player) external onlyAuthorizedOperator {
+    if (getRemainingFights(player) == 0) revert NoMoreFightsForToday();
+    uint256 currentDay = block.timestamp / 1 days;
+    fightsPerDay[player][currentDay]++;
+  }
+
+  /**
    * @notice The function returns the player-selected objects.
    * @param player The address of the player.
    * @return The player-selected objects.
@@ -245,6 +261,24 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
       balances[2] > 0 ? tokenIds[2] : 0, // Powerbank
       balances[3] > 0 ? tokenIds[3] : 0 // Laptop
     ];
+  }
+
+  /**
+   * @notice Returns the remaining number of fights for the player.
+   * @param player The address of the player.
+   * @return The remaining number of fights for the player.
+   */
+  function getRemainingFights(address player) public view returns (uint256) {
+    uint256 currentDay = block.timestamp / 1 days;
+    uint256 fightsTaken = fightsPerDay[player][currentDay];
+    uint256 powerbankId = playerInfo[player].selectedObjects[POWERBANK_SUBTYPE];
+
+    if (powerbankId != 0 && nftItems.balanceOf(player, powerbankId) > 0) {
+      uint256 additionalFights = nftItems.getPowerbankCapacity(powerbankId);
+      return initialFightsPerDay + additionalFights - fightsTaken;
+    }
+
+    return initialFightsPerDay - fightsTaken;
   }
 
   /**
