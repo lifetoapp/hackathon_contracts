@@ -49,6 +49,15 @@ abstract contract LootboxBase is ItemBase {
         _mintItem(to, LOOTBOX_TYPE, subType, itemId, 0);
     }
 
+    function _mintLootboxes(
+        address to,
+        uint amount,
+        uint64 subType,
+        uint64 itemId
+    ) internal {
+        _mintItems(to, amount, LOOTBOX_TYPE, subType, itemId, 0);
+    }
+
     function _openLootbox(address owner, uint lootbox) internal {
         require(isLootbox(lootbox), "Lootboxes: not a lootbox");
         require(balanceOf(owner, lootbox) > 0, "Lootboxes: zero lootboxes owned");
@@ -77,7 +86,11 @@ abstract contract RegularLootbox is LootboxBase, Equipment, EquipmentParts {
     }
 
     function _mintRegularLootbox(address to) internal {
-        _mintLootbox(to, REGULAR_LOOTBOX_SUBTYPE, 1);
+        _mintLootbox(to, REGULAR_LOOTBOX_SUBTYPE, 0);
+    }
+
+    function _mintRegularLootboxes(address to, uint amount) internal {
+        _mintLootboxes(to, amount, REGULAR_LOOTBOX_SUBTYPE, 0);
     }
 
     function _claimRegularLootboxReward(address owner, uint lootbox) internal {

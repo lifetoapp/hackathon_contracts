@@ -29,6 +29,12 @@ contract LifeHackatonItems is
     uint public premiumLootboxPrice;
 
     address public paymentReceiver;
+    address public playersContract;
+
+    modifier onlyPlayersContract() {
+        require(msg.sender == playersContract, "LifeHackatonItems: only Players contract can call this function");
+        _;
+    }
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() initializer {}
@@ -53,11 +59,21 @@ contract LifeHackatonItems is
     }
 
     function buyRegularLootbox() external {
-      regularToken.safeTransferFrom(_msgSender(), paymentReceiver, regularLootboxPrice);
+        address msgSender = _msgSender();
+
+        regularToken.safeTransferFrom(msgSender, paymentReceiver, regularLootboxPrice);
+        _mintRegularLootbox(msgSender);
     }
 
     function buyPremiumLootbox() external {
-      premiumToken.safeTransferFrom(_msgSender(), paymentReceiver, premiumLootboxPrice);
+        address msgSender = _msgSender();
+      
+        premiumToken.safeTransferFrom(_msgSender(), paymentReceiver, premiumLootboxPrice);
+        _mintPremiumLootbox(msgSender);
+    }
+
+    function giveRegularLootboxes(address to, uint amount) external onlyPlayersContract() {
+        _mintRegularLootboxes(to, amount);
     }
 
     // TODO: add direct item purchases
@@ -74,20 +90,13 @@ contract LifeHackatonItems is
         premiumLootboxPrice = newPrice;
     }
 
+    function setPlayersContract(address playersContract_) external onlyOwner() {
+        playersContract = playersContract_;
+    }
+
     function _authorizeUpgrade(address newImplementation)
         internal
         onlyOwner()
         override
     {}
-
-    // // The following functions are overrides required by Solidity.
-
-    // function supportsInterface(bytes4 interfaceId)
-    //     public
-    //     view
-    //     override(ERC1155Upgradeable, AccessControlUpgradeable)
-    //     returns (bool)
-    // {
-    //     return super.supportsInterface(interfaceId);
-    // }
 }

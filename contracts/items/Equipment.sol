@@ -31,8 +31,8 @@ abstract contract EquipmentBase is ItemBase {
         return 10 * (2 ** (getEquipmentLevel(item) - 1));
     }
 
-    function getRewardMultiplier(uint256 item) public pure virtual returns (uint256) {
-        // Calculates the reward multiplier of the equipment.
+    function getEquipmentRewardIncrease(uint256 item) public pure virtual returns (uint256) {
+        // Calculates the reward increase percentage of the equipment.
         // Used formula: RM(n)=5*n
         return 5 * getEquipmentLevel(item);
     }
