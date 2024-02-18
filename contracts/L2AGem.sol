@@ -22,7 +22,7 @@ import {EIP712DataValidator} from './libs/EIP712DataValidator.sol';
 // Errors.
 error UnauthorizedMinter();
 error NonceAlreadyUsed();
-error MaxMintableAmountExceeded();
+error MaxMintableAmountPerDayExceeded();
 
 /**
  * @title The Life2App GEM Token.
@@ -52,7 +52,7 @@ contract L2AppGem is
   }
 
   /// @notice The max amount of tokens that can be minted per day.
-  uint256 public maxMintableAmount;
+  uint256 public maxMintableAmountPerDay;
   /// @notice The mapping of authorized minters.
   mapping(address => bool) public minters;
   /// @notice The mapping of used nonces per address.
@@ -82,14 +82,13 @@ contract L2AppGem is
   /**
    * @notice The smart contract initializer.
    */
-  function initialize(uint256 maxMintableAmount_, uint256 mintingInterval_) public initializer {
+  function initialize(uint256 maxMintableAmountPerDay_) public initializer {
     __ERC20_init('L2APPGEM', 'L2APPGEM');
     __ERC20Burnable_init();
     __Ownable_init(msg.sender);
     __ReentrancyGuard_init();
     EIP712DataValidator.initializeValidator();
-    maxMintableAmount = maxMintableAmount_;
-    mintingInterval = mintingInterval_;
+    maxMintableAmountPerDay = maxMintableAmountPerDay_;
   }
 
   /**
@@ -137,8 +136,8 @@ contract L2AppGem is
     uint256 dailyMinted = mintedPerDay[mintData.to][currentDay];
     uint256 mintAmountAfter = dailyMinted + mintData.amount;
 
-    if (mintAmountAfter > maxMintableAmount) {
-      revert MaxMintableAmountExceeded();
+    if (mintAmountAfter > maxMintableAmountPerDay) {
+      revert MaxMintableAmountPerDayExceeded();
     }
 
     // Check if the nonce is not used.
