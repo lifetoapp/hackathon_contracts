@@ -23,7 +23,7 @@ import {LifeHackatonItems} from './LifeHackatonItems.sol';
 error InvalidLeague();
 error NotAnAuthorizedOperator();
 error NotTheOwnerOfTheToken();
-error UserAlreadyInTheLeague();
+error PlayerAlreadyInTheLeague();
 error InvalidLeagueChange();
 error InvalidNftItemsAddress();
 
@@ -83,16 +83,16 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   LifeHackatonItems public nftItems;
   /// @notice The array of leagues.
   League[MAX_LEAGUE] public leagues;
-  /// @notice Received reward lootboxes per user per league.
+  /// @notice Received reward lootboxes per player per league.
   mapping(address => mapping(uint256 => bool)) public hasReceivedReward;
 
   // Events.
   /// @notice The event emitted when the player's objects are updated.
-  event PlayerObjectsUpdate(address indexed user, uint256 phoneTokenId, uint256 earbudsTokenId, uint256 powerbankTokenId, uint256 laptopTokenId);
+  event PlayerObjectsUpdate(address indexed player, uint256 phoneTokenId, uint256 earbudsTokenId, uint256 powerbankTokenId, uint256 laptopTokenId);
   /// @notice The event emitted when the player's league is updated.
-  event PlayerLeagueUpdate(address indexed user, uint256 league);
+  event PlayerLeagueUpdate(address indexed player, uint256 league);
   /// @notice The event emitted when the player's rating is updated.
-  event PlayerRatingUpdate(address indexed user, uint256 rating);
+  event PlayerRatingUpdate(address indexed player, uint256 rating);
   /// @notice The event emitted when the authorized operator is set.
   event AuthorizedOperatorSet(address authorizedOperator, bool authorize);
   /// @notice The event emitted when the NFT items smart contract is set.
@@ -134,13 +134,13 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   }
 
   /**
-   * @notice The function to update the user's selected objects.
+   * @notice The function to update the player's selected objects.
    * @param phoneTokenId The ID of the phone token.
    * @param earbudsTokenId The ID of the earbuds token.
    * @param powerbankTokenId The ID of the power bank token.
    * @param laptopTokenId The ID of the laptop token.
    */
-  function updateUserSelectedObjects(uint256 phoneTokenId, uint256 earbudsTokenId, uint256 powerbankTokenId, uint256 laptopTokenId) external {
+  function updatePlayerSelectedObjects(uint256 phoneTokenId, uint256 earbudsTokenId, uint256 powerbankTokenId, uint256 laptopTokenId) external {
     // Verifying ownership of each token.
     if (phoneTokenId != 0 && nftItems.balanceOf(msg.sender, phoneTokenId) == 0) revert NotTheOwnerOfTheToken();
     if (earbudsTokenId != 0 && nftItems.balanceOf(msg.sender, earbudsTokenId) == 0) revert NotTheOwnerOfTheToken();
@@ -158,34 +158,34 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   }
 
   /**
-   * @notice The function increases the user's rating.
-   * @param user The address of the user.
+   * @notice The function increases the player's rating.
+   * @param player The address of the player.
    * @param by The rating to increase by.
    */
-  function increaseUserRating(address user, uint256 by) external onlyAuthorizedOperator {
-    uint256 rating = playerInfo[user].currentRating + by;
-    playerInfo[user].currentRating = rating;
-    _updateLeague(user);
-    emit PlayerRatingUpdate(user, rating);
+  function increasePlayerRating(address player, uint256 by) external onlyAuthorizedOperator {
+    uint256 rating = playerInfo[player].currentRating + by;
+    playerInfo[player].currentRating = rating;
+    _updateLeague(player);
+    emit PlayerRatingUpdate(player, rating);
   }
 
   /**
-   * @notice The function decreases the user's rating.
-   * @param user The address of the user.
+   * @notice The function decreases the player's rating.
+   * @param player The address of the player.
    * @param by The rating to decrease by.
    */
-  function decreaseUserRating(address user, uint256 by) external onlyAuthorizedOperator {
+  function decreasePlayerRating(address player, uint256 by) external onlyAuthorizedOperator {
     uint256 rating;
 
-    if (playerInfo[user].currentRating > by) {
-      rating = playerInfo[user].currentRating - by;
+    if (playerInfo[player].currentRating > by) {
+      rating = playerInfo[player].currentRating - by;
     } else {
       rating = 0;
     }
 
-    playerInfo[user].currentRating = rating;
-    _updateLeague(user);
-    emit PlayerRatingUpdate(user, rating);
+    playerInfo[player].currentRating = rating;
+    _updateLeague(player);
+    emit PlayerRatingUpdate(player, rating);
   }
 
   /**
@@ -209,16 +209,16 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   }
 
   /**
-   * @notice The function returns the user-selected objects.
-   * @param user The address of the user.
-   * @return The user-selected objects.
+   * @notice The function returns the player-selected objects.
+   * @param player The address of the player.
+   * @return The player-selected objects.
    */
-  function getUserSelectedObjects(address user) external view returns (uint256[4] memory) {
+  function getPlayerSelectedObjects(address player) external view returns (uint256[4] memory) {
     return [
-      playerInfo[user].selectedObjects[PHONE_SUBTYPE],
-      playerInfo[user].selectedObjects[EARBUDS_SUBTYPE],
-      playerInfo[user].selectedObjects[POWERBANK_SUBTYPE],
-      playerInfo[user].selectedObjects[LAPTOP_SUBTYPE]
+      playerInfo[player].selectedObjects[PHONE_SUBTYPE],
+      playerInfo[player].selectedObjects[EARBUDS_SUBTYPE],
+      playerInfo[player].selectedObjects[POWERBANK_SUBTYPE],
+      playerInfo[player].selectedObjects[LAPTOP_SUBTYPE]
     ];
   }
 
@@ -232,32 +232,32 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   }
 
   /**
-   * @notice The function returns the coolness of the user.
-   * @param user The address of the user.
-   * @return The coolness of the user.
+   * @notice The function returns the coolness of the player.
+   * @param player The address of the player.
+   * @return The coolness of the player.
    */
-  function getUserCoolness(address user) external view returns (uint256) {
+  function getPlayerCoolness(address player) external view returns (uint256) {
     return
-      nftItems.getEquipmentCoolness(playerInfo[user].selectedObjects[PHONE_SUBTYPE]) +
-      nftItems.getEquipmentCoolness(playerInfo[user].selectedObjects[EARBUDS_SUBTYPE]) +
-      nftItems.getEquipmentCoolness(playerInfo[user].selectedObjects[POWERBANK_SUBTYPE]) +
-      nftItems.getEquipmentCoolness(playerInfo[user].selectedObjects[LAPTOP_SUBTYPE]);
+      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[PHONE_SUBTYPE]) +
+      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[EARBUDS_SUBTYPE]) +
+      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[POWERBANK_SUBTYPE]) +
+      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[LAPTOP_SUBTYPE]);
   }
 
   /**
-   * @notice The function returns the number of users in the league.
+   * @notice The function returns the number of players in the league.
    * @param league The league number.
-   * @return The number of users in the league.
+   * @return The number of players in the league.
    */
   function getLeaguePlayersCount(uint256 league) external view returns (uint256) {
     return leaguePlayers[league].length();
   }
 
   /**
-   * @notice The function returns the user by index in the league.
+   * @notice The function returns the player by index in the league.
    * @param league The league number.
-   * @param index The index of the user in the league.
-   * @return The user in the league.
+   * @param index The index of the player in the league.
+   * @return The player in the league.
    */
   function getLeaguePlayerByIndex(uint256 league, uint256 index) external view returns (address) {
     return leaguePlayers[league].at(index);
@@ -271,22 +271,22 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     return '1.0.0';
   }
 
-  function _updateLeague(address user) internal {
-    uint256 userRating = playerInfo[user].currentRating;
-    uint256 userLeague = playerInfo[user].currentLeague;
+  function _updateLeague(address player) internal {
+    uint256 playerRating = playerInfo[player].currentRating;
+    uint256 playerLeague = playerInfo[player].currentLeague;
 
     // TODO: make function more effective, no need to check leagues one by one
     for (uint i = 0; i < leagues.length; i++) {
-      if (userRating >= leagues[i].minRating && userRating <= leagues[i].maxRating) {
-        if (userLeague != i) {
-          leaguePlayers[userLeague].remove(user);
-          leaguePlayers[i].add(user);
-          playerInfo[user].currentLeague = i;
+      if (playerRating >= leagues[i].minRating && playerRating <= leagues[i].maxRating) {
+        if (playerLeague != i) {
+          leaguePlayers[playerLeague].remove(player);
+          leaguePlayers[i].add(player);
+          playerInfo[player].currentLeague = i;
           uint256 rewardLootBoxAmount = leagues[i].rewardLootBoxAmount;
 
-          if (!hasReceivedReward[user][i] && rewardLootBoxAmount > 0) {
-            hasReceivedReward[user][i] = true;
-            _rewardLootBoxes(user, rewardLootBoxAmount);
+          if (!hasReceivedReward[player][i] && rewardLootBoxAmount > 0) {
+            hasReceivedReward[player][i] = true;
+            _rewardLootBoxes(player, rewardLootBoxAmount);
           }
         }
         break;
@@ -294,8 +294,8 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     }
   }
 
-  function _rewardLootBoxes(address user, uint256 amount) internal {
-    nftItems.giveRegularLootboxes(user, amount);
+  function _rewardLootBoxes(address player, uint256 amount) internal {
+    nftItems.giveRegularLootboxes(player, amount);
   }
 
   /**
