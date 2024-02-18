@@ -232,19 +232,6 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   }
 
   /**
-   * @notice The function returns the coolness of the player.
-   * @param player The address of the player.
-   * @return The coolness of the player.
-   */
-  function getPlayerCoolness(address player) external view returns (uint256) {
-    return
-      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[PHONE_SUBTYPE]) +
-      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[EARBUDS_SUBTYPE]) +
-      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[POWERBANK_SUBTYPE]) +
-      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[LAPTOP_SUBTYPE]);
-  }
-
-  /**
    * @notice The function returns the number of players in the league.
    * @param league The league number.
    * @return The number of players in the league.
@@ -261,6 +248,23 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    */
   function getLeaguePlayerByIndex(uint256 league, uint256 index) external view returns (address) {
     return leaguePlayers[league].at(index);
+  }
+
+  function getPlayerLeague(address player) external view returns (uint) {
+    return playerInfo[player].currentLeague;
+  }
+
+  /**
+   * @notice The function returns the coolness of the player.
+   * @param player The address of the player.
+   * @return The coolness of the player.
+   */
+  function getPlayerCoolness(address player) external view returns (uint256) {
+    return
+      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[PHONE_SUBTYPE]) +
+      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[EARBUDS_SUBTYPE]) +
+      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[POWERBANK_SUBTYPE]) +
+      nftItems.getEquipmentCoolness(playerInfo[player].selectedObjects[LAPTOP_SUBTYPE]);
   }
 
   /**
