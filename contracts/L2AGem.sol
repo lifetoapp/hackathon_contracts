@@ -120,6 +120,17 @@ contract L2AppGem is
   }
 
   /**
+   * @notice Mints new tokens and transfers them to the specified address.
+   * @notice Does not account for the max mintable amount per day.
+   * @param to The address to which the tokens will be transferred.
+   * @param amount The amount of tokens to be minted.
+   */
+  function mint(address to, uint256 amount) external onlyAuthorizedOperator {
+      _mint(to, amount);
+      emit Mint(to, amount);
+  }
+
+  /**
    * @notice The mint function is used to mint new tokens.
    * @dev This function mints new tokens and transfers them to the specified address.
    */
