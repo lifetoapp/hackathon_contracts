@@ -309,8 +309,13 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     uint256 playerRating = playerInfo[player].currentRating;
     uint256 playerLeague = playerInfo[player].currentLeague;
 
+    if (playerLeague == 0 && leaguePlayers[0].contains(player) == false) {
+      leaguePlayers[0].add(player);
+      playerInfo[player].currentLeague = 0;
+    }
+
     // TODO: make function more effective, no need to check leagues one by one
-    for (uint i = 0; i < leagues.length; i++) {
+    for (uint256 i; i < leagues.length; i++) {
       if (playerRating >= leagues[i].minRating && playerRating <= leagues[i].maxRating) {
         if (playerLeague != i) {
           leaguePlayers[playerLeague].remove(player);
