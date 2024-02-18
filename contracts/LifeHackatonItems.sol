@@ -22,13 +22,13 @@ contract LifeHackatonItems is
 {
     using SafeERC20 for IERC20;
 
-    IERC20 regularToken;
-    IERC20 premiumToken;
+    IERC20 public regularToken;
+    IERC20 public premiumToken;
 
-    uint regularLootboxPrice;
-    uint premiumLootboxPrice;
+    uint public regularLootboxPrice;
+    uint public premiumLootboxPrice;
 
-    address paymentReceiver;
+    address public paymentReceiver;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() initializer {}
