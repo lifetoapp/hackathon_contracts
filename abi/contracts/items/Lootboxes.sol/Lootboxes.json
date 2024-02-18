@@ -492,6 +492,25 @@
         "type": "uint256"
       }
     ],
+    "name": "getEquipmentRewardIncrease",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "item",
+        "type": "uint256"
+      }
+    ],
     "name": "getItemExtra",
     "outputs": [
       {
@@ -593,25 +612,6 @@
       }
     ],
     "name": "getPowerbankCapacity",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "item",
-        "type": "uint256"
-      }
-    ],
-    "name": "getRewardMultiplier",
     "outputs": [
       {
         "internalType": "uint256",

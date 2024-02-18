@@ -169,7 +169,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "user",
+        "name": "player",
         "type": "address"
       },
       {
@@ -188,7 +188,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "user",
+        "name": "player",
         "type": "address"
       },
       {
@@ -225,7 +225,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "user",
+        "name": "player",
         "type": "address"
       },
       {
@@ -352,7 +352,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "user",
+        "name": "player",
         "type": "address"
       },
       {
@@ -361,7 +361,7 @@
         "type": "uint256"
       }
     ],
-    "name": "decreaseUserRating",
+    "name": "decreasePlayerRating",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -432,11 +432,11 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "user",
+        "name": "player",
         "type": "address"
       }
     ],
-    "name": "getUserCoolness",
+    "name": "getPlayerCoolness",
     "outputs": [
       {
         "internalType": "uint256",
@@ -451,11 +451,30 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "user",
+        "name": "player",
         "type": "address"
       }
     ],
-    "name": "getUserSelectedObjects",
+    "name": "getPlayerLeague",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      }
+    ],
+    "name": "getPlayerSelectedObjects",
     "outputs": [
       {
         "internalType": "uint256[4]",
@@ -470,7 +489,31 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "user",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "hasReceivedReward",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "player",
         "type": "address"
       },
       {
@@ -479,7 +522,7 @@
         "type": "uint256"
       }
     ],
-    "name": "increaseUserRating",
+    "name": "increasePlayerRating",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -524,7 +567,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "lootBoxes",
+        "name": "rewardLootBoxAmount",
         "type": "uint256"
       }
     ],
@@ -668,7 +711,7 @@
         "type": "uint256"
       }
     ],
-    "name": "updateUserSelectedObjects",
+    "name": "updatePlayerSelectedObjects",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
