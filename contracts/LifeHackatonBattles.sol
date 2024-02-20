@@ -64,9 +64,8 @@ contract LifeHackatonBattles is
             (battles[player].status != BattleStatus.STARTED && isBattleExpired(player)),
             "LifeHackatonBattles: invalid battle status"
         );
-        
-        // TODO: consume energy
 
+        playersContract.increaseFights(player);
         battles[player] = BattleData(
             BattleStatus.INITIATED,
             BattleDifficulty.NORMAL,
