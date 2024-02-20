@@ -7,6 +7,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "./items/Equipment.sol";
 import "./items/EquipmentParts.sol";
 import "./items/Lootboxes.sol";
@@ -21,6 +22,7 @@ contract LifeHackatonItems is
     UUPSUpgradeable
 {
     using SafeERC20 for IERC20;
+    using EnumerableSet for EnumerableSet.UintSet;
 
     IERC20 public regularToken;
     IERC20 public premiumToken;
@@ -30,6 +32,10 @@ contract LifeHackatonItems is
 
     address public paymentReceiver;
     address public playersContract;
+
+    // TODO: leave indexing for backend?
+    // owner => owned items set
+    mapping(address => EnumerableSet.UintSet) private ownedItems;
 
     modifier onlyPlayersContract() {
         require(msg.sender == playersContract, "LifeHackatonItems: only Players contract can call this function");
@@ -104,6 +110,31 @@ contract LifeHackatonItems is
 
     function setPlayersContract(address playersContract_) external onlyOwner() {
         playersContract = playersContract_;
+    }
+
+    function getPlayerOwnedItems(address player) external view returns (uint[] memory) {
+        return ownedItems[player].values();
+    }
+
+    function _update(
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory values
+    ) internal virtual override {
+        super._update(from, to, ids, values);
+
+        for (uint i = 0; i < ids.length; i++) {
+            uint id = ids[i];
+
+            if (from != address(0) && balanceOf(from, id) == 0) {
+                ownedItems[from].remove(id);
+            }
+
+            if (to != address(0)) {
+                ownedItems[from].add(id);
+            }
+        }
     }
 
     function _authorizeUpgrade(address newImplementation)
