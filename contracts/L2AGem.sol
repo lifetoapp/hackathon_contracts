@@ -23,6 +23,7 @@ import {EIP712DataValidator} from './libs/EIP712DataValidator.sol';
 error UnauthorizedMinter();
 error NonceAlreadyUsed();
 error MaxMintableAmountPerDayExceeded();
+error NotAnAuthorizedOperator();
 
 /**
  * @title The Life2App GEM Token.
@@ -59,6 +60,8 @@ contract L2AppGem is
   mapping(address => mapping(uint256 => bool)) public usedNonces;
   /// @notice The mapping contains the number of minted tokens per day per address.
   mapping(address => mapping(uint256 => uint256)) public mintedPerDay;
+  /// @notice The mapping of authorized operators.
+  mapping(address => bool) public authorizedOperators;
 
   // Events.
   /// @notice The event is emitted when a new minter is added.
@@ -69,6 +72,16 @@ contract L2AppGem is
   event Mint(address indexed to, uint256 amount);
   /// @notice The event is emitted when tokens are burned.
   event Burn(address indexed from, uint256 amount);
+  /// @notice The event emitted when the authorized operator is set.
+  event AuthorizedOperatorSet(address authorizedOperator, bool authorize);
+
+  /**
+   * @notice The modifier to check if the sender is an authorized operator.
+   */
+  modifier onlyAuthorizedOperator() {
+    if (authorizedOperators[msg.sender] == false) revert NotAnAuthorizedOperator();
+    _;
+  }
 
   /**
    * @notice The constructor of the contract.
@@ -117,6 +130,16 @@ contract L2AppGem is
   function removeMinter(address minter) external onlyOwner {
     minters[minter] = false;
     emit MinterRemoved(minter);
+  }
+
+  /**
+   * @notice The function to set the authorized operator.
+   * @param authorizedOperator_ The address of the authorized operator.
+   * @param authorize The authorization status.
+   */
+  function setAuthorizedOperator(address authorizedOperator_, bool authorize) external onlyOwner {
+    authorizedOperators[authorizedOperator_] = authorize;
+    emit AuthorizedOperatorSet(authorizedOperator_, authorize);
   }
 
   /**
