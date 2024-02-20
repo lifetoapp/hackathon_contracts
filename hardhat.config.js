@@ -61,7 +61,7 @@ module.exports = {
     },
     hardhat: {
       forking: {
-        enabled: true,
+        enabled: false,
         url: 'https://bsc-dataseed1.bnbchain.org', // mainnet
       },
     },
