@@ -157,7 +157,7 @@
   },
   {
     "inputs": [],
-    "name": "easyRatingStake",
+    "name": "bigRatingChange",
     "outputs": [
       {
         "internalType": "uint256",
@@ -166,6 +166,13 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "completeBattle",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -260,19 +267,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "hardRatingStake",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -281,17 +275,17 @@
       },
       {
         "internalType": "uint256",
-        "name": "easyRatingStake_",
+        "name": "smallRatingChange_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "normalRatingStake_",
+        "name": "normalRatingChange_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "hardRatingStake_",
+        "name": "bigRatingChange_",
         "type": "uint256"
       }
     ],
@@ -347,7 +341,7 @@
   },
   {
     "inputs": [],
-    "name": "normalRatingStake",
+    "name": "normalRatingChange",
     "outputs": [
       {
         "internalType": "uint256",
@@ -402,6 +396,19 @@
     "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "smallRatingChange",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

@@ -38,12 +38,37 @@
   },
   {
     "inputs": [],
+    "name": "InvalidEarbudsTokenType",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidInitialization",
     "type": "error"
   },
   {
     "inputs": [],
+    "name": "InvalidLaptopTokenType",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidNftItemsAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidPhoneTokenType",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidPowerbankTokenType",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NoMoreFightsForToday",
     "type": "error"
   },
   {
@@ -369,6 +394,30 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "fightsPerDay",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "league",
         "type": "uint256"
@@ -489,6 +538,25 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "player",
+        "type": "address"
+      }
+    ],
+    "name": "getRemainingFights",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "",
         "type": "address"
       },
@@ -515,6 +583,19 @@
         "internalType": "address",
         "name": "player",
         "type": "address"
+      }
+    ],
+    "name": "increaseFights",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
       },
       {
         "internalType": "uint256",
@@ -525,6 +606,19 @@
     "name": "increasePlayerRating",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "initialFightsPerDay",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
