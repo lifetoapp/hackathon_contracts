@@ -126,6 +126,8 @@ abstract contract RegularLootbox is LootboxBase, Equipment, EquipmentParts {
                 _mintLaptop(owner, 1);
             }
         }
+
+        _finalizeLootboxRewardClaim(owner, lootbox);
     }
 }
 
