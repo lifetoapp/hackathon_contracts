@@ -15,6 +15,11 @@
       "address": "0xA3dc9c13B751a2429A48834470F84C7bd7aBe1bf",
       "txHash": "0x75ff98ecb4282d47357dd8d9d04193d4ed7ee59c3efcf16288b1036fc69a637f",
       "kind": "uups"
+    },
+    {
+      "address": "0x4ED62da8A5E0CF2aD1F36e35B4cCDc0a199Da00e",
+      "txHash": "0xc8635fc79e2f6089ee5d3c069334a954cb7bbcd9ba4c84ba846f15babe888184",
+      "kind": "uups"
     }
   ],
   "impls": {
@@ -533,6 +538,293 @@
     "5a849c5277b434bd612dd0bc8ce7db7618c9bb66298114330580393de5ecac82": {
       "address": "0xdFC3118560C7AC4A67423B578DbF2BbC8b5BD209",
       "txHash": "0x74090c1c3d9b134ed0a6378b000f2cbfe38c291d40cd6e2c21e9adb8dd002dc5",
+      "layout": {
+        "solcVersion": "0.8.23",
+        "storage": [
+          {
+            "label": "lootboxOpenedBlocks",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "contract": "LootboxBase",
+            "src": "contracts\\items\\Lootboxes.sol:13"
+          },
+          {
+            "label": "nonces",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "contract": "LootboxBase",
+            "src": "contracts\\items\\Lootboxes.sol:14"
+          },
+          {
+            "label": "regularToken",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_contract(IERC20)3617",
+            "contract": "LifeHackatonItems",
+            "src": "contracts\\LifeHackatonItems.sol:27"
+          },
+          {
+            "label": "premiumToken",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_contract(IERC20)3617",
+            "contract": "LifeHackatonItems",
+            "src": "contracts\\LifeHackatonItems.sol:28"
+          },
+          {
+            "label": "regularLootboxPrice",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "LifeHackatonItems",
+            "src": "contracts\\LifeHackatonItems.sol:30"
+          },
+          {
+            "label": "premiumLootboxPrice",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256",
+            "contract": "LifeHackatonItems",
+            "src": "contracts\\LifeHackatonItems.sol:31"
+          },
+          {
+            "label": "paymentReceiver",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_address",
+            "contract": "LifeHackatonItems",
+            "src": "contracts\\LifeHackatonItems.sol:33"
+          },
+          {
+            "label": "playersContract",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_address",
+            "contract": "LifeHackatonItems",
+            "src": "contracts\\LifeHackatonItems.sol:34"
+          },
+          {
+            "label": "ownedItems",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_struct(UintSet)6092_storage)",
+            "contract": "LifeHackatonItems",
+            "src": "contracts\\LifeHackatonItems.sol:38"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(uint256 => mapping(address => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ERC1155Storage)210_storage": {
+            "label": "struct ERC1155Upgradeable.ERC1155Storage",
+            "members": [
+              {
+                "label": "_balances",
+                "type": "t_mapping(t_uint256,t_mapping(t_address,t_uint256))",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_operatorApprovals",
+                "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "_uri",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(InitializableStorage)64_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)14_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IERC20)3617": {
+            "label": "contract IERC20",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(UintSet)6092_storage)": {
+            "label": "mapping(address => struct EnumerableSet.UintSet)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Set)5620_storage": {
+            "label": "struct EnumerableSet.Set",
+            "members": [
+              {
+                "label": "_values",
+                "type": "t_array(t_bytes32)dyn_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_positions",
+                "type": "t_mapping(t_bytes32,t_uint256)",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(UintSet)6092_storage": {
+            "label": "struct EnumerableSet.UintSet",
+            "members": [
+              {
+                "label": "_inner",
+                "type": "t_struct(Set)5620_storage",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "64"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.ERC1155": [
+            {
+              "contract": "ERC1155Upgradeable",
+              "label": "_balances",
+              "type": "t_mapping(t_uint256,t_mapping(t_address,t_uint256))",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC1155\\ERC1155Upgradeable.sol:27",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "ERC1155Upgradeable",
+              "label": "_operatorApprovals",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC1155\\ERC1155Upgradeable.sol:29",
+              "offset": 0,
+              "slot": "1"
+            },
+            {
+              "contract": "ERC1155Upgradeable",
+              "label": "_uri",
+              "type": "t_string_storage",
+              "src": "@openzeppelin\\contracts-upgradeable\\token\\ERC1155\\ERC1155Upgradeable.sol:32",
+              "offset": 0,
+              "slot": "2"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "20f366ea37afe1aee0f49eb8bfa19f8e5c971843873c51dd93cf59c0497767c0": {
+      "address": "0x873Fa652Eb454618CD4416FDf4ab52b58f86400B",
+      "txHash": "0x2e8e43c6727ae051c44b71453826e896812ca1ff9cc590d0d4ae20d8d738cd5e",
       "layout": {
         "solcVersion": "0.8.23",
         "storage": [

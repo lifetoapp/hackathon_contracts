@@ -4,6 +4,6 @@
 
 | Contract          | opBNB Testnet                              |
 | ----------------- | ------------------------------------------ |
-| TestERC20         | 0x730dDc34030AD4e2A1520A4042C7D9C347Fca703 |
-| LifeHackatonItems | 0xA3dc9c13B751a2429A48834470F84C7bd7aBe1bf |
+| TestERC20         | 0x15bDa934Fc73E36e0c6A6E53bd9f132bB5ec7144 |
+| LifeHackatonItems | 0x4ED62da8A5E0CF2aD1F36e35B4cCDc0a199Da00e |
 
