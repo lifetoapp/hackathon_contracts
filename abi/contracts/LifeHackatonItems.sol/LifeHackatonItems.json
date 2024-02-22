@@ -543,19 +543,6 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "lootbox",
-        "type": "uint256"
-      }
-    ],
-    "name": "_claimLootboxReward",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "account",
         "type": "address"
@@ -611,6 +598,19 @@
   {
     "inputs": [],
     "name": "buyRegularLootbox",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "lootbox",
+        "type": "uint256"
+      }
+    ],
+    "name": "claimLootboxReward",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

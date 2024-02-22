@@ -82,7 +82,7 @@ contract LifeHackatonItems is
         _openLootbox(_msgSender(), lootbox);
     }
 
-    function _claimLootboxReward(uint lootbox) external {
+    function claimLootboxReward(uint lootbox) external {
         _claimLootboxReward(_msgSender(), lootbox);
     }
 
