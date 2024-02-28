@@ -98,6 +98,18 @@ contract LifeHackatonItems is
         _mintRegularLootboxes(to, amount);
     }
 
+    // TODO: for testing only, remove
+    function freeMintSelfItems(uint64 type_, uint64 subType, uint64 level, uint amount) external {
+        _mintItems(
+            _msgSender(),
+            amount,
+            type_,
+            subType,
+            0,
+            level
+        );
+    }
+
     // TODO: add direct item purchases
 
     function setURI(string memory newURI) external onlyOwner() {
