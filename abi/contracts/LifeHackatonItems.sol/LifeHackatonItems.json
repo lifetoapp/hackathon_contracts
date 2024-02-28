@@ -618,6 +618,34 @@
   {
     "inputs": [
       {
+        "internalType": "uint64",
+        "name": "type_",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "subType",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "level",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "freeMintSelfItems",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "item",
         "type": "uint256"
