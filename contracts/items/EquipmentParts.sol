@@ -6,7 +6,7 @@ import "./Equipment.sol";
 abstract contract EquipmentPartBase is EquipmentBase {
 
     uint64 public constant EQUIPMENT_PART_TYPE = uint64(uint256(keccak256("EQUIPMENT_PART_TYPE")));
-    uint public constant NUMBER_OF_PARTS_TO_MERGE = 10;
+    uint public constant NUMBER_OF_PARTS_TO_MERGE = 5;
 
     function isEquipmentPart(uint item) public pure returns (bool) {
         return getItemType(item) == EQUIPMENT_PART_TYPE;
