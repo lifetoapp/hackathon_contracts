@@ -136,7 +136,7 @@ contract LifeHackatonItems is
             }
 
             if (to != address(0)) {
-                ownedItems[from].add(id);
+                ownedItems[to].add(id);
             }
         }
     }
