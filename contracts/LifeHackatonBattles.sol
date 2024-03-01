@@ -8,6 +8,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "./LifeHackatonPlayers.sol";
+import "./interface/IERC20Mintable.sol";
 
 contract LifeHackatonBattles is
     Initializable,
@@ -31,6 +32,9 @@ contract LifeHackatonBattles is
     }
 
     LifeHackatonPlayers public playersContract;
+    IERC20Mintable public rewardToken;
+
+    uint public rewardAmount;
 
     uint public smallRatingChange;
     uint public normalRatingChange;
@@ -44,6 +48,8 @@ contract LifeHackatonBattles is
 
     function initialize(
         address playersContract_,
+        address rewardToken_,
+        uint rewardAmount_,
         uint smallRatingChange_,
         uint normalRatingChange_,
         uint bigRatingChange_
@@ -52,6 +58,8 @@ contract LifeHackatonBattles is
         __UUPSUpgradeable_init();
 
         playersContract = LifeHackatonPlayers(playersContract_);
+        rewardToken = IERC20Mintable(rewardToken_);
+        rewardAmount = rewardAmount_;
         smallRatingChange = smallRatingChange_;
         normalRatingChange = normalRatingChange_;
         bigRatingChange = bigRatingChange_;
@@ -59,6 +67,10 @@ contract LifeHackatonBattles is
 
     function initiateBattle() external {
         address player = _msgSender();
+        require(
+            playersContract.isPlayerRegistered(player),
+            "LifeHackatonBattles: invalid battle status"
+        );
         require(
             battles[player].status == BattleStatus.COMPLETED || 
             (battles[player].status != BattleStatus.STARTED && isBattleExpired(player)),
@@ -107,7 +119,7 @@ contract LifeHackatonBattles is
             }
 
             playersContract.increasePlayerRating(player, ratingIncrease);
-            // TODO: mint reward tokens
+            rewardToken.mint(player, rewardAmount);
         } else {
             uint ratingDecrease;
             if (difficulty == BattleDifficulty.NORMAL) {

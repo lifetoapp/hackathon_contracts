@@ -2,9 +2,9 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "../interface/IERC20Mintable.sol";
 
-contract TestERC20 is ERC20 {
+contract TestERC20 is IERC20Mintable, ERC20 {
     uint fixedTax = 0;
 
     constructor() ERC20("TestERC20", "TEST") {

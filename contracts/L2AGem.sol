@@ -18,6 +18,7 @@ import {ERC20BurnableUpgradeable} from '@openzeppelin/contracts-upgradeable/toke
 import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 import {ReentrancyGuardUpgradeable} from '@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol';
 import {EIP712DataValidator} from './libs/EIP712DataValidator.sol';
+import {IERC20Mintable} from "./interface/IERC20Mintable.sol";
 
 // Errors.
 error UnauthorizedMinter();
@@ -34,6 +35,7 @@ error NotAnAuthorizedOperator();
 contract L2AppGem is
   Initializable,
   UUPSUpgradeable,
+  IERC20Mintable,
   ERC20Upgradeable,
   ERC20BurnableUpgradeable,
   OwnableUpgradeable,

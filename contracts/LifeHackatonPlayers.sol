@@ -31,6 +31,7 @@ error InvalidEarbudsTokenType();
 error InvalidPowerbankTokenType();
 error InvalidLaptopTokenType();
 error NotEnoughEnergy();
+error EmptyName();
 
 /**
  * @title The Players smart contract.
@@ -147,6 +148,8 @@ contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeab
   }
 
   function register(string calldata name) external {
+    if (bytes(name).length == 0) revert EmptyName();
+
     address player = _msgSender();
 
     playerInfo[player].name = name;
@@ -254,6 +257,10 @@ contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeab
       lastEnergyConsumedDay[player] = currentDay;
       energyConsumed[player] = 1;
     }
+  }
+
+  function isPlayerRegistered(address player) public view returns (bool) {
+    return bytes(playerInfo[player].name).length > 0;
   }
 
   /**
