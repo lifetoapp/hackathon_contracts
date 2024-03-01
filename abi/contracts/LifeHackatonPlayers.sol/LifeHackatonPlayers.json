@@ -68,12 +68,12 @@
   },
   {
     "inputs": [],
-    "name": "NoMoreFightsForToday",
+    "name": "NotAnAuthorizedOperator",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "NotAnAuthorizedOperator",
+    "name": "NotEnoughEnergy",
     "type": "error"
   },
   {
@@ -374,6 +374,32 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "baseEnergy",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      }
+    ],
+    "name": "consumeEnergy",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -397,14 +423,9 @@
         "internalType": "address",
         "name": "",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
-    "name": "fightsPerDay",
+    "name": "energyConsumed",
     "outputs": [
       {
         "internalType": "uint256",
@@ -542,7 +563,7 @@
         "type": "address"
       }
     ],
-    "name": "getRemainingFights",
+    "name": "getRemainingEnergy",
     "outputs": [
       {
         "internalType": "uint256",
@@ -583,19 +604,6 @@
         "internalType": "address",
         "name": "player",
         "type": "address"
-      }
-    ],
-    "name": "increaseFights",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "player",
-        "type": "address"
       },
       {
         "internalType": "uint256",
@@ -609,19 +617,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "initialFightsPerDay",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -632,6 +627,25 @@
     "name": "initialize",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "lastEnergyConsumedDay",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -705,6 +719,11 @@
     "name": "playerInfo",
     "outputs": [
       {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
         "internalType": "uint256",
         "name": "currentLeague",
         "type": "uint256"
@@ -729,6 +748,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "name": "register",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

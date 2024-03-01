@@ -370,7 +370,7 @@
     "name": "playersContract",
     "outputs": [
       {
-        "internalType": "contract Players",
+        "internalType": "contract LifeHackatonPlayers",
         "name": "",
         "type": "address"
       }
