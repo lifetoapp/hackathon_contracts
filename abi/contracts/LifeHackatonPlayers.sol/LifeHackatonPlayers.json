@@ -115,6 +115,11 @@
   },
   {
     "inputs": [],
+    "name": "PlayerAlreadyRegistered",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "UUPSUnauthorizedCallContext",
     "type": "error"
   },
@@ -504,6 +509,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getNextDayTimestamp",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -569,6 +587,25 @@
       }
     ],
     "name": "getRemainingEnergy",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      }
+    ],
+    "name": "getTotalEnergy",
     "outputs": [
       {
         "internalType": "uint256",
