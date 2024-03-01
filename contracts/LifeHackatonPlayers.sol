@@ -30,7 +30,7 @@ error InvalidPhoneTokenType();
 error InvalidEarbudsTokenType();
 error InvalidPowerbankTokenType();
 error InvalidLaptopTokenType();
-error NoMoreFightsForToday();
+error NotEnoughEnergy();
 
 /**
  * @title The Players smart contract.
@@ -38,7 +38,7 @@ error NoMoreFightsForToday();
  * @notice The Players smart contract is used to manage the players of the game.
  * @dev The Players smart contract is used to manage the players of the game.
  */
-contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
+contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   using EnumerableSet for EnumerableSet.AddressSet;
 
   /**
@@ -48,6 +48,7 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    * @param currentRating The current rating of the player.
    */
   struct PlayerInfo {
+    string name;
     mapping(uint64 => uint256) selectedObjects;
     uint256 currentLeague;
     uint256 currentRating;
@@ -90,10 +91,12 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   League[MAX_LEAGUE] public leagues;
   /// @notice Received reward lootboxes per player per league.
   mapping(address => mapping(uint256 => bool)) public hasReceivedReward;
-  /// @notice The number of fights of a player per day.
-  mapping(address => mapping(uint256 => uint256)) public fightsPerDay;
-  /// @notice The number of initial fights per day a player has.
-  uint256 public initialFightsPerDay;
+  /// @notice The day energy was last consumed for a player.
+  mapping(address => uint256) public lastEnergyConsumedDay;
+  /// @notice The number of energy spent this/last day for a player.
+  mapping(address => uint256) public energyConsumed;
+  /// @notice The number of initial energy per day a player has.
+  uint256 public baseEnergy;
 
   // Events.
   /// @notice The event emitted when the player's objects are updated.
@@ -140,7 +143,14 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     leagues[6] = League('Diamond', 2500, 3099, 6);
     leagues[7] = League('Master', 3100, 3699, 7);
     leagues[8] = League('Elite', 3700, type(uint256).max, 10); // max rating for Elite
-    initialFightsPerDay = 5;
+    baseEnergy = 5;
+  }
+
+  function register(string calldata name) external {
+    address player = _msgSender();
+
+    playerInfo[player].name = name;
+    leaguePlayers[0].add(player);
   }
 
   /**
@@ -150,7 +160,12 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
    * @param powerbankTokenId The ID of the power bank token.
    * @param laptopTokenId The ID of the laptop token.
    */
-  function updatePlayerSelectedObjects(uint256 phoneTokenId, uint256 earbudsTokenId, uint256 powerbankTokenId, uint256 laptopTokenId) external {
+  function updatePlayerSelectedObjects(
+    uint256 phoneTokenId,
+    uint256 earbudsTokenId,
+    uint256 powerbankTokenId,
+    uint256 laptopTokenId
+  ) external {
     bool hasPhone = phoneTokenId != 0;
     bool hasEarbuds = earbudsTokenId != 0;
     bool hasPowerbank = powerbankTokenId != 0;
@@ -161,10 +176,10 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     if (hasPowerbank && nftItems.balanceOf(msg.sender, powerbankTokenId) == 0) revert NotTheOwnerOfTheToken();
     if (hasLaptop && nftItems.balanceOf(msg.sender, laptopTokenId) == 0) revert NotTheOwnerOfTheToken();
     // Check for validity of the objects.
-    if (hasPhone && nftItems.getItemSubtype(phoneTokenId) != PHONE_SUBTYPE) revert InvalidPhoneTokenType();
-    if (hasEarbuds && nftItems.getItemSubtype(earbudsTokenId) != EARBUDS_SUBTYPE) revert InvalidEarbudsTokenType();
-    if (hasPowerbank && nftItems.getItemSubtype(powerbankTokenId) != POWERBANK_SUBTYPE) revert InvalidPowerbankTokenType();
-    if (hasLaptop && nftItems.getItemSubtype(laptopTokenId) != LAPTOP_SUBTYPE) revert InvalidLaptopTokenType();
+    if (hasPhone && !nftItems.isPhone(phoneTokenId)) revert InvalidPhoneTokenType();
+    if (hasEarbuds && !nftItems.isEarbuds(earbudsTokenId)) revert InvalidEarbudsTokenType();
+    if (hasPowerbank && !nftItems.isPowerbank(powerbankTokenId)) revert InvalidPowerbankTokenType();
+    if (hasLaptop && !nftItems.isLaptop(laptopTokenId)) revert InvalidLaptopTokenType();
     // Set the selected objects.
     playerInfo[msg.sender].selectedObjects[PHONE_SUBTYPE] = phoneTokenId;
     playerInfo[msg.sender].selectedObjects[EARBUDS_SUBTYPE] = earbudsTokenId;
@@ -226,13 +241,19 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   }
 
   /**
-   * @notice Increases the number of fights of a player.
+   * @notice Consumes 1 energy of a player.
    * @param player The address of the player.
    */
-  function increaseFights(address player) external onlyAuthorizedOperator {
-    if (getRemainingFights(player) == 0) revert NoMoreFightsForToday();
+  function consumeEnergy(address player) external onlyAuthorizedOperator {
+    if (getRemainingEnergy(player) > 0) revert NotEnoughEnergy();
     uint256 currentDay = block.timestamp / 1 days;
-    fightsPerDay[player][currentDay]++;
+
+    if (currentDay == lastEnergyConsumedDay[player]) {
+      energyConsumed[player]--;
+    } else {
+      lastEnergyConsumedDay[player] = currentDay;
+      energyConsumed[player] = 1;
+    }
   }
 
   /**
@@ -264,21 +285,27 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   }
 
   /**
-   * @notice Returns the remaining number of fights for the player.
+   * @notice Returns the remaining energy for the player.
    * @param player The address of the player.
-   * @return The remaining number of fights for the player.
+   * @return The remaining energy for the player.
    */
-  function getRemainingFights(address player) public view returns (uint256) {
+  function getRemainingEnergy(address player) public view returns (uint256) {
     uint256 currentDay = block.timestamp / 1 days;
-    uint256 fightsTaken = fightsPerDay[player][currentDay];
     uint256 powerbankId = playerInfo[player].selectedObjects[POWERBANK_SUBTYPE];
+    uint256 totalEnergy = baseEnergy;
 
     if (powerbankId != 0 && nftItems.balanceOf(player, powerbankId) > 0) {
-      uint256 additionalFights = nftItems.getPowerbankCapacity(powerbankId);
-      return initialFightsPerDay + additionalFights - fightsTaken;
+      uint256 energyIncrease = nftItems.getPowerbankCapacity(powerbankId);
+      totalEnergy += energyIncrease;
     }
 
-    return initialFightsPerDay - fightsTaken;
+    if (lastEnergyConsumedDay[player] < currentDay) {
+      return totalEnergy;
+    }
+
+    uint256 energyConsumed_ = energyConsumed[player];
+
+    return totalEnergy > energyConsumed_ ? totalEnergy - energyConsumed_ : 0;
   }
 
   /**
@@ -342,11 +369,6 @@ contract Players is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   function _updateLeague(address player) internal {
     uint256 playerRating = playerInfo[player].currentRating;
     uint256 playerLeague = playerInfo[player].currentLeague;
-
-    if (playerLeague == 0 && leaguePlayers[0].contains(player) == false) {
-      leaguePlayers[0].add(player);
-      playerInfo[player].currentLeague = 0;
-    }
 
     // TODO: make function more effective, no need to check leagues one by one
     for (uint256 i; i < leagues.length; i++) {

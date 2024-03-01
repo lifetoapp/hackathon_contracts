@@ -7,7 +7,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "./Players.sol";
+import "./LifeHackatonPlayers.sol";
 
 contract LifeHackatonBattles is
     Initializable,
@@ -30,7 +30,7 @@ contract LifeHackatonBattles is
         address enemy;
     }
 
-    Players public playersContract;
+    LifeHackatonPlayers public playersContract;
 
     uint public smallRatingChange;
     uint public normalRatingChange;
@@ -51,7 +51,7 @@ contract LifeHackatonBattles is
         __Ownable_init(msg.sender);
         __UUPSUpgradeable_init();
 
-        playersContract = Players(playersContract_);
+        playersContract = LifeHackatonPlayers(playersContract_);
         smallRatingChange = smallRatingChange_;
         normalRatingChange = normalRatingChange_;
         bigRatingChange = bigRatingChange_;
@@ -65,7 +65,7 @@ contract LifeHackatonBattles is
             "LifeHackatonBattles: invalid battle status"
         );
 
-        playersContract.increaseFights(player);
+        playersContract.consumeEnergy(player);
         battles[player] = BattleData(
             BattleStatus.INITIATED,
             BattleDifficulty.NORMAL,
