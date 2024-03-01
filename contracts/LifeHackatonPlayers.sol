@@ -32,6 +32,7 @@ error InvalidPowerbankTokenType();
 error InvalidLaptopTokenType();
 error NotEnoughEnergy();
 error EmptyName();
+error PlayerAlreadyRegistered();
 
 /**
  * @title The Players smart contract.
@@ -148,9 +149,10 @@ contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeab
   }
 
   function register(string calldata name) external {
-    if (bytes(name).length == 0) revert EmptyName();
-
     address player = _msgSender();
+
+    if (isPlayerRegistered(player)) revert PlayerAlreadyRegistered();
+    if (bytes(name).length == 0) revert EmptyName();
 
     playerInfo[player].name = name;
     leaguePlayers[0].add(player);
@@ -291,6 +293,18 @@ contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeab
     ];
   }
 
+  function getTotalEnergy(address player) public view returns (uint256) {
+    uint256 totalEnergy = baseEnergy;
+    uint256 powerbankId = playerInfo[player].selectedObjects[POWERBANK_SUBTYPE];
+
+    if (powerbankId != 0 && nftItems.balanceOf(player, powerbankId) > 0) {
+      uint256 energyIncrease = nftItems.getPowerbankCapacity(powerbankId);
+      totalEnergy += energyIncrease;
+    }
+
+    return totalEnergy;
+  }
+
   /**
    * @notice Returns the remaining energy for the player.
    * @param player The address of the player.
@@ -298,13 +312,7 @@ contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeab
    */
   function getRemainingEnergy(address player) public view returns (uint256) {
     uint256 currentDay = block.timestamp / 1 days;
-    uint256 powerbankId = playerInfo[player].selectedObjects[POWERBANK_SUBTYPE];
-    uint256 totalEnergy = baseEnergy;
-
-    if (powerbankId != 0 && nftItems.balanceOf(player, powerbankId) > 0) {
-      uint256 energyIncrease = nftItems.getPowerbankCapacity(powerbankId);
-      totalEnergy += energyIncrease;
-    }
+    uint256 totalEnergy = getTotalEnergy(player);
 
     if (lastEnergyConsumedDay[player] < currentDay) {
       return totalEnergy;
@@ -363,6 +371,11 @@ contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeab
     }
 
     return coolness;
+  }
+
+  function getNextDayTimestamp() external view returns (uint256) {
+    uint256 nextDay = (block.timestamp / 1 days) + 1;
+    return nextDay * 1 days;
   }
 
   /**
