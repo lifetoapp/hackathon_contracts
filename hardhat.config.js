@@ -23,7 +23,7 @@ task("test-deploy", "Test deployment")
 
     console.log("TestERC20 deployed to ", paymentTokenAddress);
 
-    const price = 10*18;
+    const price = ethers.parseUnits("11", 18);
     const accounts = await hre.ethers.getSigners();
 
     const LifeHackatonItems = await ethers.getContractFactory("LifeHackatonItems");
@@ -32,8 +32,40 @@ task("test-deploy", "Test deployment")
       ["https://test.uri", paymentTokenAddress, paymentTokenAddress, price, price, accounts[0].address]
     );
     await lifeHackatonItems.waitForDeployment();
+    const lifeHackatonItemsAddress = await lifeHackatonItems.getAddress()
 
-    console.log("LifeHackatonItems deployed to ", await lifeHackatonItems.getAddress());
+    console.log("LifeHackatonItems deployed to ", lifeHackatonItemsAddress);
+
+    const LifeHackatonPlayers = await ethers.getContractFactory("LifeHackatonPlayers");
+    const lifeHackatonPlayers = await upgrades.deployProxy(
+      LifeHackatonPlayers,
+      [lifeHackatonItemsAddress]
+    );
+    await lifeHackatonPlayers.waitForDeployment();
+    const lifeHackatonPlayersAddress = await lifeHackatonPlayers.getAddress()
+
+    console.log("LifeHackatonPlayers deployed to ", lifeHackatonPlayersAddress);
+
+    const rewardAmount = ethers.parseUnits("20", 18);
+    const smallRatingChange = 10;
+    const normalRatingChange = 20;
+    const bigRatingChange = 30;
+
+    const LifeHackatonBattles = await ethers.getContractFactory("LifeHackatonBattles");
+    const lifeHackatonBattles = await upgrades.deployProxy(
+      LifeHackatonBattles,
+      [
+        lifeHackatonPlayersAddress,
+        paymentTokenAddress,
+        rewardAmount,
+        smallRatingChange,
+        normalRatingChange,
+        bigRatingChange
+      ]
+    );
+    await lifeHackatonBattles.waitForDeployment();
+
+    console.log("LifeHackatonBattles deployed to ", await lifeHackatonBattles.getAddress());
   });
 
 module.exports = {
