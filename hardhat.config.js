@@ -64,8 +64,11 @@ task("test-deploy", "Test deployment")
       ]
     );
     await lifeHackatonBattles.waitForDeployment();
+    const lifeHackatonBattlesAddress = await lifeHackatonBattles.getAddress();
 
-    console.log("LifeHackatonBattles deployed to ", await lifeHackatonBattles.getAddress());
+    await lifeHackatonPlayers.setAuthorizedOperator(lifeHackatonBattlesAddress, true);
+
+    console.log("LifeHackatonBattles deployed to ", lifeHackatonBattlesAddress);
   });
 
 module.exports = {
