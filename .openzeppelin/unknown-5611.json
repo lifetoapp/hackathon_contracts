@@ -55,6 +55,66 @@
       "address": "0x6C25F0E9B3C57C28e083b82cA1bcC33683F67241",
       "txHash": "0x934b42ee4c5baa749427cf43d39437c910840bddef782c887f47c4944ca1c2d4",
       "kind": "uups"
+    },
+    {
+      "address": "0x203D89021E65272A351319028f8d544902840dc4",
+      "txHash": "0xec1b9a3d93798c4c8c89d5db5a64acc53fec8e471436b8f7b5423f1bcda424f9",
+      "kind": "uups"
+    },
+    {
+      "address": "0xEf7Ba994a9701901731E4a14FafCB5910CD0F088",
+      "txHash": "0xbd52f9940bb00c56c3ed14b50f16843ad17472a1c5bb6284f735279233b1b2fe",
+      "kind": "uups"
+    },
+    {
+      "address": "0x522FbdA557f0255c08E73Ad3a62D2513861eEB2A",
+      "txHash": "0xf6f919a1c618a42625b8c3884e86eaf7e34b3d92579849ee5e5bfe50bb416c1f",
+      "kind": "uups"
+    },
+    {
+      "address": "0xF7a8B8AC9a9Bc988486D92FE4630418c8A3b6d17",
+      "txHash": "0xaf567ebdf4530dff9ff7ab39c83e01b883932f9fb98f5097e554cb6a14b66eac",
+      "kind": "uups"
+    },
+    {
+      "address": "0x37a95253605552a510266988599aE178204CaB23",
+      "txHash": "0xa397c8402f230ae8ff6b194ea77fae2ba3f64dc750740daa9811cfc475d3f1d8",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0f0837CA68eda311f8e47048D43b421733e54ee3",
+      "txHash": "0x2fc60fb22345ee0558e15f8e47a1ad014c23e7581eae3d6f2ab4a83842b7467d",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0F43EE95C927fBE5C1516988CB62F52A629247A1",
+      "txHash": "0x95fbe625ad87b87b3d51b08f39465278fdced8b4204103c0e3ba3c5a152e6359",
+      "kind": "uups"
+    },
+    {
+      "address": "0xF7B34B6DC1C2A5B036F7041aB3E68d5c66E2A5Bb",
+      "txHash": "0xf96a462eec9f266f3183abc35633f2500fa8bc73215cc654b2b051f96fe9dd55",
+      "kind": "uups"
+    },
+    {
+      "address": "0xd7F030c37CF1762b953F58Fa3d7Ad740Ae94BCbb",
+      "txHash": "0x24a76ab9f376810a3ccd1f93ca659a758a486719f21ce4343ba5686d7c6ec7ed",
+      "kind": "uups"
+    },
+    {
+      "address": "0xE46BCc8EcD9d76A7678A4d646e3fA4e3b67DBa48",
+      "txHash": "0xee69a3eecb81ab10c5a9e2432f0e31f42d2bbce0e05904e430d30bdb7b063c52",
+      "kind": "uups"
+    },
+    {
+      "address": "0x01a4f07937EE8e90d082D9E0c4f1DcFDbC404A7A",
+      "txHash": "0xab4ef7d1876909ac00a3ad813bdb90e0f3b0f44f2bfc70c939f12d1f02c235a1",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0ae81801a38d97654b04D2C48af0876c0cd4aA87",
+      "txHash": "0xeeb245d4e9c9e0ea6e82fbdae976f5c71c88625b941f3f58d8b0043d0be5bcf2",
+      "kind": "uups"
     }
   ],
   "impls": {
@@ -1928,6 +1988,909 @@
               }
             ],
             "numberOfBytes": "192"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "135b5fffbe048a9049f80f2abc13a78938f7369c5e42be78112f1c3087aa3325": {
+      "address": "0xe546182d583580f6Bb99f82062ef94f2d28e422F",
+      "txHash": "0x0c37de595c9da4ca07510d39567470e68000dc0c4190b9ceddeeef22a6b11cce",
+      "layout": {
+        "solcVersion": "0.8.23",
+        "storage": [
+          {
+            "label": "playerInfo",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_address,t_struct(PlayerInfo)7550_storage)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:90"
+          },
+          {
+            "label": "authorizedOperators",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:93"
+          },
+          {
+            "label": "leaguePlayers",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint256,t_struct(AddressSet)5935_storage)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:95"
+          },
+          {
+            "label": "nftItems",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_contract(LifeHackatonItems)7485",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:96"
+          },
+          {
+            "label": "leagues",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_array(t_struct(League)7560_storage)9_storage",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:98"
+          },
+          {
+            "label": "hasReceivedReward",
+            "offset": 0,
+            "slot": "40",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_bool))",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:99"
+          },
+          {
+            "label": "lastEnergyConsumedDay",
+            "offset": 0,
+            "slot": "41",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:104"
+          },
+          {
+            "label": "energyConsumed",
+            "offset": 0,
+            "slot": "42",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:105"
+          },
+          {
+            "label": "baseEnergy",
+            "offset": 0,
+            "slot": "43",
+            "type": "t_uint256",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:106"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)64_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)14_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(League)7560_storage)9_storage": {
+            "label": "struct LifeHackatonPlayers.League[9]",
+            "numberOfBytes": "1152"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(LifeHackatonItems)7485": {
+            "label": "contract LifeHackatonItems",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_bool))": {
+            "label": "mapping(address => mapping(uint256 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(PlayerInfo)7550_storage)": {
+            "label": "mapping(address => struct LifeHackatonPlayers.PlayerInfo)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_bool)": {
+            "label": "mapping(uint256 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(AddressSet)5935_storage)": {
+            "label": "mapping(uint256 => struct EnumerableSet.AddressSet)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_uint256)": {
+            "label": "mapping(uint64 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(AddressSet)5935_storage": {
+            "label": "struct EnumerableSet.AddressSet",
+            "members": [
+              {
+                "label": "_inner",
+                "type": "t_struct(Set)5620_storage",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(League)7560_storage": {
+            "label": "struct LifeHackatonPlayers.League",
+            "members": [
+              {
+                "label": "name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "minRating",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "maxRating",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "rewardLootBoxAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(PlayerInfo)7550_storage": {
+            "label": "struct LifeHackatonPlayers.PlayerInfo",
+            "members": [
+              {
+                "label": "name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "selectedObjects",
+                "type": "t_mapping(t_uint64,t_uint256)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "currentLeague",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "currentRating",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(Set)5620_storage": {
+            "label": "struct EnumerableSet.Set",
+            "members": [
+              {
+                "label": "_values",
+                "type": "t_array(t_bytes32)dyn_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_positions",
+                "type": "t_mapping(t_bytes32,t_uint256)",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "83360af30caf3bc0b2f8c809c6f135e77114c6fd4df974b18ec3719a26006716": {
+      "address": "0x6c4fa8fA43CF9b492BC1C21AA5D011383b233381",
+      "txHash": "0x76d6de0ae6fcc93eaca9c47b4df26c33d8faf242e3d26ded8c28f1b739e592ef",
+      "layout": {
+        "solcVersion": "0.8.23",
+        "storage": [
+          {
+            "label": "playerInfo",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_address,t_struct(PlayerInfo)7550_storage)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:90"
+          },
+          {
+            "label": "authorizedOperators",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:93"
+          },
+          {
+            "label": "leaguePlayers",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint256,t_struct(AddressSet)5935_storage)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:95"
+          },
+          {
+            "label": "nftItems",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_contract(LifeHackatonItems)7485",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:96"
+          },
+          {
+            "label": "leagues",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_array(t_struct(League)7560_storage)9_storage",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:98"
+          },
+          {
+            "label": "hasReceivedReward",
+            "offset": 0,
+            "slot": "40",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_bool))",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:99"
+          },
+          {
+            "label": "lastEnergyConsumedDay",
+            "offset": 0,
+            "slot": "41",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:104"
+          },
+          {
+            "label": "energyConsumed",
+            "offset": 0,
+            "slot": "42",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:105"
+          },
+          {
+            "label": "baseEnergy",
+            "offset": 0,
+            "slot": "43",
+            "type": "t_uint256",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:106"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)64_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)14_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(League)7560_storage)9_storage": {
+            "label": "struct LifeHackatonPlayers.League[9]",
+            "numberOfBytes": "1152"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(LifeHackatonItems)7485": {
+            "label": "contract LifeHackatonItems",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_bool))": {
+            "label": "mapping(address => mapping(uint256 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(PlayerInfo)7550_storage)": {
+            "label": "mapping(address => struct LifeHackatonPlayers.PlayerInfo)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_bool)": {
+            "label": "mapping(uint256 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(AddressSet)5935_storage)": {
+            "label": "mapping(uint256 => struct EnumerableSet.AddressSet)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_uint256)": {
+            "label": "mapping(uint64 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(AddressSet)5935_storage": {
+            "label": "struct EnumerableSet.AddressSet",
+            "members": [
+              {
+                "label": "_inner",
+                "type": "t_struct(Set)5620_storage",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(League)7560_storage": {
+            "label": "struct LifeHackatonPlayers.League",
+            "members": [
+              {
+                "label": "name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "minRating",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "maxRating",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "rewardLootBoxAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(PlayerInfo)7550_storage": {
+            "label": "struct LifeHackatonPlayers.PlayerInfo",
+            "members": [
+              {
+                "label": "name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "selectedObjects",
+                "type": "t_mapping(t_uint64,t_uint256)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "currentLeague",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "currentRating",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(Set)5620_storage": {
+            "label": "struct EnumerableSet.Set",
+            "members": [
+              {
+                "label": "_values",
+                "type": "t_array(t_bytes32)dyn_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_positions",
+                "type": "t_mapping(t_bytes32,t_uint256)",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "79945647ea72a88f6fddbbd8e829798d70fe4bfe2b67a1ea586e298181a0c221": {
+      "address": "0x2BecC157eaffaEc063a647eB7C9D430fc2833424",
+      "txHash": "0x78c582ca5ccec742553a4cfa3ca7ec73ce6901f7e84e45faf540369eeff9357d",
+      "layout": {
+        "solcVersion": "0.8.23",
+        "storage": [
+          {
+            "label": "playerInfo",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_address,t_struct(PlayerInfo)7550_storage)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:90"
+          },
+          {
+            "label": "authorizedOperators",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:93"
+          },
+          {
+            "label": "leaguePlayers",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint256,t_struct(AddressSet)5935_storage)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:95"
+          },
+          {
+            "label": "nftItems",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_contract(LifeHackatonItems)7485",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:96"
+          },
+          {
+            "label": "leagues",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_array(t_struct(League)7560_storage)9_storage",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:98"
+          },
+          {
+            "label": "hasReceivedReward",
+            "offset": 0,
+            "slot": "40",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_bool))",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:99"
+          },
+          {
+            "label": "lastEnergyConsumedDay",
+            "offset": 0,
+            "slot": "41",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:104"
+          },
+          {
+            "label": "energyConsumed",
+            "offset": 0,
+            "slot": "42",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:105"
+          },
+          {
+            "label": "baseEnergy",
+            "offset": 0,
+            "slot": "43",
+            "type": "t_uint256",
+            "contract": "LifeHackatonPlayers",
+            "src": "contracts\\LifeHackatonPlayers.sol:106"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)64_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)14_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(League)7560_storage)9_storage": {
+            "label": "struct LifeHackatonPlayers.League[9]",
+            "numberOfBytes": "1152"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(LifeHackatonItems)7485": {
+            "label": "contract LifeHackatonItems",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_bool))": {
+            "label": "mapping(address => mapping(uint256 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(PlayerInfo)7550_storage)": {
+            "label": "mapping(address => struct LifeHackatonPlayers.PlayerInfo)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_bool)": {
+            "label": "mapping(uint256 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(AddressSet)5935_storage)": {
+            "label": "mapping(uint256 => struct EnumerableSet.AddressSet)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_uint256)": {
+            "label": "mapping(uint64 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(AddressSet)5935_storage": {
+            "label": "struct EnumerableSet.AddressSet",
+            "members": [
+              {
+                "label": "_inner",
+                "type": "t_struct(Set)5620_storage",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(League)7560_storage": {
+            "label": "struct LifeHackatonPlayers.League",
+            "members": [
+              {
+                "label": "name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "minRating",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "maxRating",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "rewardLootBoxAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(PlayerInfo)7550_storage": {
+            "label": "struct LifeHackatonPlayers.PlayerInfo",
+            "members": [
+              {
+                "label": "name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "selectedObjects",
+                "type": "t_mapping(t_uint64,t_uint256)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "currentLeague",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "currentRating",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(Set)5620_storage": {
+            "label": "struct EnumerableSet.Set",
+            "members": [
+              {
+                "label": "_values",
+                "type": "t_array(t_bytes32)dyn_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_positions",
+                "type": "t_mapping(t_bytes32,t_uint256)",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
           },
           "t_uint256": {
             "label": "uint256",
