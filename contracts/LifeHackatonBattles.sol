@@ -41,7 +41,9 @@ contract LifeHackatonBattles is
     uint public bigRatingChange;
 
     // player => current/last battle
-    mapping(address => BattleData) battles;
+    mapping(address => BattleData) public battles;
+
+    event BattleCompleted(bool battleWon, uint ratingChange, uint rewardAmount);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() initializer {}
@@ -69,11 +71,10 @@ contract LifeHackatonBattles is
         address player = _msgSender();
         require(
             playersContract.isPlayerRegistered(player),
-            "LifeHackatonBattles: invalid battle status"
+            "LifeHackatonBattles: player is not registered"
         );
         require(
-            battles[player].status == BattleStatus.COMPLETED || 
-            (battles[player].status != BattleStatus.STARTED && isBattleExpired(player)),
+            battles[player].status != BattleStatus.STARTED || isBattleExpired(player),
             "LifeHackatonBattles: invalid battle status"
         );
 
@@ -107,33 +108,35 @@ contract LifeHackatonBattles is
         address player = _msgSender();
         BattleData storage battle = battles[player];
         BattleDifficulty difficulty = battle.difficulty;
-
-        if (isBattleWon(player)) {
-            uint ratingIncrease;
+        uint ratingChange;
+        
+        bool battleWon = isBattleWon(player);
+        if (battleWon) {
             if (difficulty == BattleDifficulty.NORMAL) {
-                ratingIncrease = normalRatingChange;
+                ratingChange = normalRatingChange;
             } else if (difficulty == BattleDifficulty.EASY) {
-                ratingIncrease = smallRatingChange;
+                ratingChange = smallRatingChange;
             } else {
-                ratingIncrease = bigRatingChange;
+                ratingChange = bigRatingChange;
             }
 
-            playersContract.increasePlayerRating(player, ratingIncrease);
+            playersContract.increasePlayerRating(player, ratingChange);
             rewardToken.mint(player, rewardAmount);
         } else {
-            uint ratingDecrease;
             if (difficulty == BattleDifficulty.NORMAL) {
-                ratingDecrease = normalRatingChange;
+                ratingChange = normalRatingChange;
             } else if (difficulty == BattleDifficulty.EASY) {
-                ratingDecrease = bigRatingChange;
+                ratingChange = bigRatingChange;
             } else {
-                ratingDecrease = smallRatingChange;
+                ratingChange = smallRatingChange;
             }
 
-            playersContract.decreasePlayerRating(player, ratingDecrease);
+            playersContract.decreasePlayerRating(player, ratingChange);
         }
 
         battle.status = BattleStatus.COMPLETED;
+
+        emit BattleCompleted(battleWon, ratingChange, rewardAmount);
     }
 
     // TODO: SETTERS!
@@ -148,7 +151,7 @@ contract LifeHackatonBattles is
 
     function getEnemyForBattle(address player) public view returns (address, BattleDifficulty) {
         require(
-            battles[player].status == BattleStatus.INITIATED || !isBattleExpired(player),
+            battles[player].status == BattleStatus.INITIATED && !isBattleExpired(player),
             "LifeHackatonBattles: invalid battle status"
         );
 
@@ -206,7 +209,7 @@ contract LifeHackatonBattles is
     function isBattleWon(address player) public view returns (bool) {
         BattleData storage battle = battles[player];
         require(
-            battle.status == BattleStatus.STARTED || !isBattleExpired(player),
+            battle.status == BattleStatus.STARTED && !isBattleExpired(player),
             "LifeHackatonBattles: invalid battle status"
         );
 
@@ -266,6 +269,25 @@ contract LifeHackatonBattles is
         } else {
             return BattleAction.DEVIOUS;
         }
+    }
+
+    function getEnemyActionQueue(address player) public view returns (BattleAction[] memory) {
+        BattleStatus status = battles[player].status;
+        require(
+            (status == BattleStatus.STARTED || status == BattleStatus.COMPLETED) &&
+                !isBattleExpired(player),
+            "LifeHackatonBattles: invalid battle status"
+        );
+
+        uint returnSize = 20;
+        uint random = getBattleRandom(player);
+        BattleAction[] memory actions = new BattleAction[](returnSize);
+
+        for (uint i = 0; i < returnSize; i++) {
+            actions[i] = getRandomEnemyAction(random);
+            random = uint(keccak256(abi.encodePacked(random)));
+        }
+        return actions;
     }
 
     function getBattleRandom(address player) public view returns (uint) {
