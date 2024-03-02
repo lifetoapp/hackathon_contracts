@@ -115,6 +115,21 @@
       "address": "0x0ae81801a38d97654b04D2C48af0876c0cd4aA87",
       "txHash": "0xeeb245d4e9c9e0ea6e82fbdae976f5c71c88625b941f3f58d8b0043d0be5bcf2",
       "kind": "uups"
+    },
+    {
+      "address": "0xD29A0bDe6E1f648Af5125411F70462243b4c65bF",
+      "txHash": "0x054c10ae8fa4343d796f0235f64f70ec713a9901f8718e7edcbf7428d13bcb8c",
+      "kind": "uups"
+    },
+    {
+      "address": "0x117dF9cbe08014ACE84c48Cca129aEe2ea0B1f29",
+      "txHash": "0x0d3b11a80e17fc049b0eddfae65ff9924097dff331c97ab7d8fa2c433bba6ed8",
+      "kind": "uups"
+    },
+    {
+      "address": "0x387CA71440614f43ffb1D43f6d5508297aF91dcB",
+      "txHash": "0x422418edb88c76f629e687dda4ddd8c180cc237883a4063e4c9dffafa929b852",
+      "kind": "uups"
     }
   ],
   "impls": {
@@ -2891,6 +2906,240 @@
               }
             ],
             "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "54ca8e1340295d6b8d4470bd614ba87e8654fa2ceb9b37742bc1ce52f0dee5dd": {
+      "address": "0xde7093A93872b8aeB3D078A1Ebd8E87b349912D3",
+      "txHash": "0xeed835f0f515b0b894e3d2dddf7b4537d50a1b4497b7a48ab83fdac5a9946f79",
+      "layout": {
+        "solcVersion": "0.8.23",
+        "storage": [
+          {
+            "label": "playersContract",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_contract(LifeHackatonPlayers)8906",
+            "contract": "LifeHackatonBattles",
+            "src": "contracts\\LifeHackatonBattles.sol:34"
+          },
+          {
+            "label": "rewardToken",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IERC20Mintable)8919",
+            "contract": "LifeHackatonBattles",
+            "src": "contracts\\LifeHackatonBattles.sol:35"
+          },
+          {
+            "label": "rewardAmount",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "LifeHackatonBattles",
+            "src": "contracts\\LifeHackatonBattles.sol:37"
+          },
+          {
+            "label": "smallRatingChange",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "LifeHackatonBattles",
+            "src": "contracts\\LifeHackatonBattles.sol:39"
+          },
+          {
+            "label": "normalRatingChange",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "LifeHackatonBattles",
+            "src": "contracts\\LifeHackatonBattles.sol:40"
+          },
+          {
+            "label": "bigRatingChange",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256",
+            "contract": "LifeHackatonBattles",
+            "src": "contracts\\LifeHackatonBattles.sol:41"
+          },
+          {
+            "label": "battles",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_struct(BattleData)6273_storage)",
+            "contract": "LifeHackatonBattles",
+            "src": "contracts\\LifeHackatonBattles.sol:44"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)64_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)14_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_enum(BattleAction)6250)3_storage": {
+            "label": "enum LifeHackatonBattles.BattleAction[3]",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IERC20Mintable)8919": {
+            "label": "contract IERC20Mintable",
+            "numberOfBytes": "20"
+          },
+          "t_contract(LifeHackatonPlayers)8906": {
+            "label": "contract LifeHackatonPlayers",
+            "numberOfBytes": "20"
+          },
+          "t_enum(BattleAction)6250": {
+            "label": "enum LifeHackatonBattles.BattleAction",
+            "members": [
+              "TOUGH",
+              "SMART",
+              "DEVIOUS"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_enum(BattleDifficulty)6246": {
+            "label": "enum LifeHackatonBattles.BattleDifficulty",
+            "members": [
+              "NORMAL",
+              "EASY",
+              "HARD"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_enum(BattleStatus)6242": {
+            "label": "enum LifeHackatonBattles.BattleStatus",
+            "members": [
+              "COMPLETED",
+              "INITIATED",
+              "STARTED"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_struct(BattleData)6273_storage)": {
+            "label": "mapping(address => struct LifeHackatonBattles.BattleData)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(BattleData)6273_storage": {
+            "label": "struct LifeHackatonBattles.BattleData",
+            "members": [
+              {
+                "label": "status",
+                "type": "t_enum(BattleStatus)6242",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "difficulty",
+                "type": "t_enum(BattleDifficulty)6246",
+                "offset": 1,
+                "slot": "0"
+              },
+              {
+                "label": "playerActions",
+                "type": "t_array(t_enum(BattleAction)6250)3_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "randomSourceBlockNumber",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "playerCoolness",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "enemyCoolness",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "enemy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
           },
           "t_uint256": {
             "label": "uint256",
