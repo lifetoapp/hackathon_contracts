@@ -89,6 +89,31 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "bool",
+        "name": "battleWon",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "ratingChange",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "rewardAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "BattleCompleted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "uint64",
         "name": "version",
         "type": "uint64"
@@ -156,6 +181,50 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "battles",
+    "outputs": [
+      {
+        "internalType": "enum LifeHackatonBattles.BattleStatus",
+        "name": "status",
+        "type": "uint8"
+      },
+      {
+        "internalType": "enum LifeHackatonBattles.BattleDifficulty",
+        "name": "difficulty",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "randomSourceBlockNumber",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "playerCoolness",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "enemyCoolness",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "enemy",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "bigRatingChange",
     "outputs": [
@@ -189,6 +258,25 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      }
+    ],
+    "name": "getEnemyActionQueue",
+    "outputs": [
+      {
+        "internalType": "enum LifeHackatonBattles.BattleAction[]",
+        "name": "",
+        "type": "uint8[]"
       }
     ],
     "stateMutability": "view",
