@@ -29,6 +29,8 @@ contract LifeHackatonItems is
 
     uint public regularLootboxPrice;
     uint public premiumLootboxPrice;
+    // uint public premiumItemPrice;
+    // uint public premiumItemLevel;
 
     address public paymentReceiver;
     address public playersContract;
@@ -51,6 +53,8 @@ contract LifeHackatonItems is
         address premiumToken_,
         uint regularLootboxPrice_,
         uint premiumLootboxPrice_,
+        // uint premiumItemPrice_,
+        // uint premiumItemLevel_,
         address paymentReceiver_
     ) initializer public {
         __Ownable_init(msg.sender);
@@ -61,6 +65,8 @@ contract LifeHackatonItems is
         premiumToken = IERC20(premiumToken_);
         regularLootboxPrice = regularLootboxPrice_;
         premiumLootboxPrice = premiumLootboxPrice_;
+        // premiumItemPrice = premiumItemPrice_;
+        // premiumItemLevel = premiumItemLevel_;
         paymentReceiver = paymentReceiver_;
     }
 
@@ -107,6 +113,20 @@ contract LifeHackatonItems is
             subType,
             0,
             level
+        );
+    }
+
+    // TODO: stub
+    function buyPremiumItem(uint64 subType) external {
+        address msgSender = _msgSender();
+      
+        premiumToken.safeTransferFrom(msgSender, paymentReceiver, premiumLootboxPrice * 10);
+        _mintItem(
+            msgSender,
+            EQUIPMENT_TYPE,
+            subType,
+            0,
+            4
         );
     }
 
