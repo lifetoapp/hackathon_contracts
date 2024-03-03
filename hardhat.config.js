@@ -71,6 +71,18 @@ task("test-deploy", "Test deployment")
     console.log("LifeHackatonBattles deployed to ", lifeHackatonBattlesAddress);
   });
 
+task("upgrade", "Upgrades given contract")
+  .addParam("name", "The name of the contract to upgrade")
+  .addParam("address", "The address of the contract you want to upgrade")
+  .setAction(async (taskArgs) => {
+    await hre.run('compile');
+
+    const Contract = await ethers.getContractFactory(taskArgs.name);
+    await upgrades.upgradeProxy(taskArgs.address, Contract, {kind: 'uups'});
+
+    console.log(taskArgs.name, " has been upgraded!");
+  });
+
 module.exports = {
   defaultNetwork: 'hardhat',
   networks: {
