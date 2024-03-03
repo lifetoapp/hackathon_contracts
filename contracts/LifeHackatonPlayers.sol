@@ -250,7 +250,7 @@ contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeab
    * @param player The address of the player.
    */
   function consumeEnergy(address player) external onlyAuthorizedOperator {
-    if (getRemainingEnergy(player) > 0) revert NotEnoughEnergy();
+    if (getRemainingEnergy(player) == 0) revert NotEnoughEnergy();
     uint256 currentDay = block.timestamp / 1 days;
 
     if (currentDay == lastEnergyConsumedDay[player]) {
@@ -259,6 +259,11 @@ contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeab
       lastEnergyConsumedDay[player] = currentDay;
       energyConsumed[player] = 1;
     }
+  }
+
+  // TODO: for testing only, remove
+  function freeRestoreEnergy() external {
+    energyConsumed[_msgSender()] = 0;
   }
 
   function isPlayerRegistered(address player) public view returns (bool) {
