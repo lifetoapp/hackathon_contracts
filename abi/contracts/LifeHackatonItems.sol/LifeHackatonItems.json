@@ -605,7 +605,7 @@
     "inputs": [],
     "name": "buyPremiumLootbox",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -879,11 +879,6 @@
       {
         "internalType": "address",
         "name": "regularToken_",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "premiumToken_",
         "type": "address"
       },
       {
@@ -1260,19 +1255,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "premiumToken",
-    "outputs": [
-      {
-        "internalType": "contract IERC20",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",

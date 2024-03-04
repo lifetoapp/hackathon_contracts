@@ -25,7 +25,7 @@ contract LifeHackatonItems is
     using EnumerableSet for EnumerableSet.UintSet;
 
     IERC20 public regularToken;
-    IERC20 public premiumToken;
+    // IERC20 public premiumToken;
 
     uint public regularLootboxPrice;
     uint public premiumLootboxPrice;
@@ -50,7 +50,6 @@ contract LifeHackatonItems is
     function initialize(
         string memory uri,
         address regularToken_,
-        address premiumToken_,
         uint regularLootboxPrice_,
         uint premiumLootboxPrice_,
         // uint premiumItemPrice_,
@@ -62,7 +61,6 @@ contract LifeHackatonItems is
         __UUPSUpgradeable_init();
 
         regularToken = IERC20(regularToken_);
-        premiumToken = IERC20(premiumToken_);
         regularLootboxPrice = regularLootboxPrice_;
         premiumLootboxPrice = premiumLootboxPrice_;
         // premiumItemPrice = premiumItemPrice_;
@@ -77,10 +75,11 @@ contract LifeHackatonItems is
         _mintRegularLootbox(msgSender);
     }
 
-    function buyPremiumLootbox() external {
-        address msgSender = _msgSender();
+    function buyPremiumLootbox() external payable {
+        address payable msgSender = payable(_msgSender());
+        require(msg.value == premiumLootboxPrice, "LifeHackatonItems: invalid value sent");
       
-        premiumToken.safeTransferFrom(_msgSender(), paymentReceiver, premiumLootboxPrice);
+        require(msgSender.send(msg.value), "LifeHackatonItems: failed to send BNB");
         _mintPremiumLootbox(msgSender);
     }
 
@@ -120,7 +119,7 @@ contract LifeHackatonItems is
     function buyPremiumItem(uint64 subType) external {
         address msgSender = _msgSender();
       
-        premiumToken.safeTransferFrom(msgSender, paymentReceiver, premiumLootboxPrice * 10);
+        regularToken.safeTransferFrom(msgSender, paymentReceiver, regularLootboxPrice * 10);
         _mintItem(
             msgSender,
             EQUIPMENT_TYPE,
