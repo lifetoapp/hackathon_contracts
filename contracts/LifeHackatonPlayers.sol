@@ -80,6 +80,8 @@ contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeab
   uint64 public constant LAPTOP_SUBTYPE = uint64(uint256(keccak256('LAPTOP_SUBTYPE')));
   /// @notice The maximum number of leagues.
   uint256 public constant MAX_LEAGUE = 9;
+  
+  uint public constant BASE_COOLNESS = 100;
 
   /// @notice The mapping of player info per address.
   mapping(address => PlayerInfo) public playerInfo;
@@ -202,7 +204,7 @@ contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeab
   function increasePlayerRating(address player, uint256 by) external onlyAuthorizedOperator {
     uint256 rating = playerInfo[player].currentRating + by;
     playerInfo[player].currentRating = rating;
-    _updateLeague(player);
+    // _updateLeague(player); // TODO: revert
     emit PlayerRatingUpdate(player, rating);
   }
 
@@ -221,7 +223,7 @@ contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeab
     }
 
     playerInfo[player].currentRating = rating;
-    _updateLeague(player);
+    // _updateLeague(player); // TODO: revert
     emit PlayerRatingUpdate(player, rating);
   }
 
@@ -366,7 +368,7 @@ contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeab
    * @return The coolness of the player.
    */
   function getPlayerCoolness(address player) external view returns (uint256) {
-    uint256 coolness;
+    uint256 coolness = BASE_COOLNESS;
     uint256[4] memory selectedObjects = getPlayerSelectedObjects(player);
 
     for (uint256 i; i < selectedObjects.length; i++) {

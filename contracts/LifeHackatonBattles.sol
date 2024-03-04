@@ -209,7 +209,7 @@ contract LifeHackatonBattles is
     function isBattleWon(address player) public view returns (bool) {
         BattleData storage battle = battles[player];
         require(
-            battle.status == BattleStatus.STARTED && !isBattleExpired(player),
+            battle.status != BattleStatus.INITIATED && !isBattleExpired(player),
             "LifeHackatonBattles: invalid battle status"
         );
 
