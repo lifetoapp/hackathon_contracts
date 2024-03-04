@@ -254,7 +254,7 @@ contract LifeHackatonPlayers is Initializable, UUPSUpgradeable, OwnableUpgradeab
     uint256 currentDay = block.timestamp / 1 days;
 
     if (currentDay == lastEnergyConsumedDay[player]) {
-      energyConsumed[player]--;
+      energyConsumed[player]++;
     } else {
       lastEnergyConsumedDay[player] = currentDay;
       energyConsumed[player] = 1;
